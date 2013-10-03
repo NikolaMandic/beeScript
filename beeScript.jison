@@ -6,34 +6,36 @@
 %lex
 %%
 
-[ ]+                   /* skip whitespace */
-[0-9]+("."[0-9]+)?\b  return 'NUMBER'
-\n                    return 'NEWLINE'
-"while"                    return 'WHILE'
-"."                   return 'DOT'
-"|"                   return '|'
-"&&"                   return '&&'
-"=="                   return '=='
-"!="                   return '!='
-"="                   return 'EQ'
-"*"                   return '*'
-"/"                   return '/'
-"-"                   return '-'
-"+"                   return '+'
-"+"                   return ','
-"^"                   return '^'
-"("                   return '('
-"if"                   return 'IF'
-"else"                   return 'ELSE'
-")"                   return ')'
-"PI"                  return 'PI'
-"E"                   return 'E'
-"def"                   return 'DEF'
+[ ]+ /* skip whitespace */
+[0-9]+("."[0-9]+)?\b return 'NUMBER'
+\n return 'NEWLINE'
+"while" return 'WHILE'
+"." return 'DOT'
+"||" return '||'
+"&&" return '&&'
+"==" return '=='
+"!=" return '!='
+"=" return 'EQ'
+"*" return '*'
+"/" return '/'
+"-" return '-'
+"+" return '+'
+"," return ','
+">" return '>'
+"<" return '<'
+"^" return '^'
+"(" return '('
+"if" return 'IF'
+"else" return 'ELSE'
+")" return ')'
+"PI" return 'PI'
+"E" return 'E'
+"def" return 'DEF'
 
-\w+                   return "IDENT"
-<<EOF>>               return 'EOF'
+\w+ return "IDENT"
+<<EOF>> return 'EOF'
 
-.                     return 'ANY'
+. return 'ANY'
 
 /lex
 
@@ -51,7 +53,7 @@
 expressions
     : e EOF
         {return $1;}
-    | e NEWLINE 
+    | e NEWLINE
 EOF
 {return 'newline'; }
     ;
@@ -61,41 +63,41 @@ fieldAccess :
    IDENT accessorList;
 
 
-statementList :  statement  end | statement NEWLINE statementList ;
+statementList : statement end | statement NEWLINE statementList ;
 end : NEWLINE | EOF ;
-statement:expressionStatement | ifs | whiles | ife| 
-IDENT "(" ")"   
+statement:expressionStatement | ifs | whiles | ife|
+IDENT "(" ")"
 |
- IDENT "(" expList ")" 
+ IDENT "(" expList ")"
 |
- fieldAccess "(" expList ")" 
+ fieldAccess "(" expList ")"
 |
- fieldAccess "("  ")" 
+ fieldAccess "(" ")" |
+
+DEF IDENT "(" ")" NEWLINE statementList
+|
+DEF IDENT "(" expList ")" NEWLINE statementList
+|
+DEF fieldAccess "(" expList ")" NEWLINE statementList
+|
+DEF fieldAccess "(" ")" NEWLINE statementList
 ;
 
 
 
-expressionStatement :  assignment | fieldAccess |  
-
-DEF IDENT "(" ")"  NEWLINE statementList 
-|
-DEF  IDENT "(" expList ")" NEWLINE statementList 
-|
-DEF  fieldAccess "(" expList ")" NEWLINE statementList 
-|
-DEF  fieldAccess "("  ")" NEWLINE statementList
+expressionStatement : assignment | fieldAccess |  NUMBER
 ;
 whiles : WHILE expSList NEWLINE statementList ;
 
-expSList: expressionStatement sep expSList | expressionStatement;
+expSList: expSList sep expList | condition;
 sep: ANY;
 funcSig : IDENT "(" ")";
 funcSig : IDENT "(" expList ")";
 ifs: IF condition NEWLINE statementList ;
 ife: IF condition NEWLINE statementList ELSE NEWLINE statementList ;
 condition: expList | expList cop expList;
-arg : expList  ;
-cop : "==" | "!=" |  "&&" | "|";
+arg : expList ;
+cop : "==" | "!=" | "&&" | "||" |  "<" | ">";
 argList : arg | argCommaList;
 argCommaList : "," arg | "," argCommaList;
 
@@ -103,10 +105,7 @@ argCommaList : "," arg | "," argCommaList;
 assignment : fieldAccess EQ expList | IDENT ;
 assignment : IDENT EQ expList ;
 
-op: "+"|"-"|"/"|"*";
-expList :  term  | expList op term | "(" expList op term ")";
+op: "+"|"-"|"/"|"*"|EQ ;
+
+expList : term | expList op term | "(" expList op term ")";
 term: IDENT | NUMBER | fieldAccess;
-
-
-
-
