@@ -3,12 +3,14 @@
  * */
 
 /* lexical grammar */
-%lex
+%lex blockIdent block
 %%
 
 [ ]+ /* skip whitespace */
 [0-9]+("."[0-9]+)?\b return 'NUMBER'
 \n return 'NEWLINE'
+\r return 'NEWLINE'
+\r\c return 'NEWLINE'
 "while" return 'WHILE'
 "." return 'DOT'
 "||" return '||'
@@ -30,15 +32,15 @@
 ")" return ')'
 "PI" return 'PI'
 "E" return 'E'
-"def" return 'DEF'
-
+"def" %{
+ return 'DEF'
+%}
 \w+ return "IDENT"
 <<EOF>> return 'EOF'
 
 . return 'ANY'
 
 /lex
-
 /* operator associations and precedence */
 
 %left '+' '-'
@@ -74,16 +76,17 @@ IDENT "(" ")"
 |
  fieldAccess "(" ")" |
 
-DEF IDENT "(" ")" NEWLINE statementList
+ms  "(" ")" bs statementList 
 |
-DEF IDENT "(" expList ")" NEWLINE statementList
+ms "(" expList ")" bs statementList
 |
-DEF fieldAccess "(" expList ")" NEWLINE statementList
+ms fa "(" expList ")" bs statementList
 |
-DEF fieldAccess "(" ")" NEWLINE statementList
+ms fa "(" ")" bs statementList
 ;
-
-
+ms: DEF IDENT { yy.methodDeff($2);};
+fA : DOT IDENT fA | DOT IDENT;
+bs: NEWLINE;
 
 expressionStatement : assignment | fieldAccess |  NUMBER
 ;
