@@ -69,13 +69,18 @@ statementList : statement end | statement NEWLINE statementList ;
 end : NEWLINE | EOF ;
 statement:expressionStatement | ifs | whiles | ife|
 IDENT "(" ")"
+{ yy.methodCall($1); }
 |
  IDENT "(" expList ")"
+{ yy.methodCall($1); }
 |
  fieldAccess "(" expList ")"
-|
- fieldAccess "(" ")" |
+{ yy.methodCall($1); }
 
+|
+ fieldAccess "(" ")"
+{ yy.methodCall($1); }
+|
 ms  "(" ")" bs statementList 
 |
 ms "(" expList ")" bs statementList

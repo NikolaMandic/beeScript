@@ -86,6 +86,14 @@ case 1:return $$[$0-1];
 break;
 case 2:return 'newline'; 
 break;
+case 14: yy.methodCall($$[$0-2]); 
+break;
+case 15: yy.methodCall($$[$0-3]); 
+break;
+case 16: yy.methodCall($$[$0-3]); 
+break;
+case 17: yy.methodCall($$[$0-2]); 
+break;
 case 22: yy.methodDeff($$[$0]);
 break;
 }
