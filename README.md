@@ -13,4 +13,5 @@ trying to build a scripting language for diskotek
     while a<3;a=a+1
       f
     
+    
 
