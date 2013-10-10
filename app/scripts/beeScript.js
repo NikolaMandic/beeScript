@@ -90,7 +90,7 @@ case 3:yy.accessor($$[$0]);
 break;
 case 4: yy.accessor($$[$0]);
 break;
-case 6:yy.identFound(id);
+case 6:yy.identFound($$[$0]);
 break;
 case 15: yy.methodCall($$[$0-2]); 
 break;

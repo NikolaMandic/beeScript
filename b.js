@@ -11,10 +11,14 @@
             'while a<3;a=a+1\n'+
             ' f\n\n';
 function f(){
- this.methodDeff=function(name){
-debugger;
+ this.methodDeff = function(name){
+//debugger;
    console.log('method def '+ name);
  }
+ this.methodCall = function(name){
+   console.log('method call %s', name);
+ }
+
 };
 beeScript.yy=new f();
 beeScript.lexer.lex = function(){

@@ -68,31 +68,22 @@ accessorList :
      ;
 fieldAccess :  id accessorList ;
 
-id : IDENT {yy.identFound(id);};
+id : IDENT { yy.identFound($1); };
 
 statementList : statement end | statement NEWLINE statementList ;
 end : NEWLINE | EOF ;
-statement:expressionStatement | ifs | whiles | ife|
-id "(" ")"
-{ yy.methodCall($1); }
-|
- id "(" argL ")"
-{ yy.methodCall($1); }
-|
- fieldAccess "(" argL ")"
-{ yy.methodCall($1); }
-
-|
- fieldAccess "(" ")"
-{ yy.methodCall($1); }
-|
-ms  "(" ")" bs statementList  { yy.methodEnd(); }
-|
-ms "(" expList ")" bs statementList { yy.methodEnd(); }
-|
-ms fa "(" expList ")" bs statementList { yy.methodEnd(); }
-|
-ms fa "(" ")" bs statementList { yy.methodEnd(); }
+statement: expressionStatement 
+| ifs
+| whiles
+| ife
+| id "(" ")" { yy.methodCall($1); }
+| id "(" argL ")" { yy.methodCall($1); }
+| fieldAccess "(" argL ")" { yy.methodCall($1); }
+| fieldAccess "(" ")" { yy.methodCall($1); }
+| ms  "(" ")" bs statementList  { yy.methodEnd(); }
+| ms "(" expList ")" bs statementList { yy.methodEnd(); }
+| ms fa "(" expList ")" bs statementList { yy.methodEnd(); }
+| ms fa "(" ")" bs statementList { yy.methodEnd(); }
 ;
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
