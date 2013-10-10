@@ -156,4 +156,5 @@ console.log(beeScript.parse(ex))
 
 beeScript.yy.dumpCode()
 beeScript.yy.dumpVars()
+beeScript.yy.execCode[0]()
 
