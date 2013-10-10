@@ -32,14 +32,16 @@
 ")" return ')'
 "PI" return 'PI'
 "E" return 'E'
+"0x"\w+ return "HDRESS"
 "def" %{
  return 'DEF'
 %}
+%
+\'[^"]+\' return 'STRING'
 \w+ return "IDENT"
 <<EOF>> return 'EOF'
 
 . return 'ANY'
-
 /lex
 /* operator associations and precedence */
 
@@ -66,9 +68,9 @@ accessorList :
      DOT IDENT 
      { yy.accessor($2);}
      ;
-fieldAccess :  id accessorList ;
+fieldAccess :  id accessorList { $$ = $2 };
 
-id : IDENT { yy.identFound($1); };
+id : IDENT { $$ = $1; yy.identFound($1); };
 
 statementList : statement end | statement NEWLINE statementList ;
 end : NEWLINE | EOF ;
@@ -106,24 +108,28 @@ argList : arg | argCommaList;
 argCommaList : "," arg | "," argCommaList;
 
 
-assignment : fieldAccess EQ expList
-{ yy.assignment($1,$3) }
+assignment : 
+fieldAccess EQ expList { yy.assignment($1,$3) }
 |
 id 
-{ yy.newIdent($1);}
+{  yy.newIdent($1);}
 ;
-assignment : id EQ expList ;
+assignment : id EQ expList { yy.assignment($1,$3) };
 
-op: "+" { yy.plus();}
-|"-" { yy.minus();}
-|"/" { yy.div();}
-|"*" { yy.mul();}
+op: "+" { yy.plus;}
+|"-" { yy.minus;}
+|"/" { yy.div;}
+|"*" { yy.mul;}
 |EQ {yy.eq()};
 
-expList : term { yy.termExprFound($1)  } | 
-expList op term 
-| 
-"(" expList op term ")"
+expList : term { $$ = $1; yy.termExprFound($1);  } 
+| expList op term { $$ = $2($1,$2) }
+|"(" expList op term ")" { $$ = $2($1,$2)  }
 
 ;
-term: id | NUMBER | fieldAccess;
+term: 
+STRING {$$=yytext}
+| HDRESS {$$=yytext}
+|id {  }
+| NUMBER { $$ = $1 }
+| fieldAccess {};
