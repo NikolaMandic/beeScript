@@ -1,4 +1,6 @@
 beeScript
+
+![](https://raw.github.com/NikolaMandic/beeScript/master/PeterM_Bee.png)
 =========
 
 trying to build a scripting language for diskotek
