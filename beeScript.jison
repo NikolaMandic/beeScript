@@ -60,39 +60,44 @@ EOF
 {return 'newline'; }
     ;
 accessorList :
-   DOT IDENT accessorList | DOT IDENT ;
-fieldAccess :
-   IDENT accessorList;
+     accessorList DOT  IDENT
+     {yy.accessor($3);}
+     |
+     DOT IDENT 
+     { yy.accessor($2);}
+     ;
+fieldAccess :  id accessorList ;
 
+id : IDENT {yy.identFound(id);};
 
 statementList : statement end | statement NEWLINE statementList ;
 end : NEWLINE | EOF ;
 statement:expressionStatement | ifs | whiles | ife|
-IDENT "(" ")"
+id "(" ")"
 { yy.methodCall($1); }
 |
- IDENT "(" expList ")"
+ id "(" argL ")"
 { yy.methodCall($1); }
 |
- fieldAccess "(" expList ")"
+ fieldAccess "(" argL ")"
 { yy.methodCall($1); }
 
 |
  fieldAccess "(" ")"
 { yy.methodCall($1); }
 |
-ms  "(" ")" bs statementList 
+ms  "(" ")" bs statementList  { yy.methodEnd(); }
 |
-ms "(" expList ")" bs statementList
+ms "(" expList ")" bs statementList { yy.methodEnd(); }
 |
-ms fa "(" expList ")" bs statementList
+ms fa "(" expList ")" bs statementList { yy.methodEnd(); }
 |
-ms fa "(" ")" bs statementList
+ms fa "(" ")" bs statementList { yy.methodEnd(); }
 ;
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
 bs: NEWLINE;
-
+argL: expList ANY argL|expList;
 expressionStatement : assignment | fieldAccess |  NUMBER
 ;
 whiles : WHILE expSList NEWLINE statementList ;
@@ -110,10 +115,15 @@ argList : arg | argCommaList;
 argCommaList : "," arg | "," argCommaList;
 
 
-assignment : fieldAccess EQ expList | IDENT ;
-assignment : IDENT EQ expList ;
+assignment : fieldAccess EQ expList | id ;
+assignment : id EQ expList ;
 
 op: "+"|"-"|"/"|"*"|EQ ;
 
-expList : term | expList op term | "(" expList op term ")";
-term: IDENT | NUMBER | fieldAccess;
+expList : term { yy.termExprFound($1)  } | 
+expList op term 
+| 
+"(" expList op term ")"
+
+;
+term: id | NUMBER | fieldAccess;
