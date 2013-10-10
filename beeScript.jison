@@ -106,10 +106,19 @@ argList : arg | argCommaList;
 argCommaList : "," arg | "," argCommaList;
 
 
-assignment : fieldAccess EQ expList | id ;
+assignment : fieldAccess EQ expList
+{ yy.assignment($1,$3) }
+|
+id 
+{ yy.newIdent($1);}
+;
 assignment : id EQ expList ;
 
-op: "+"|"-"|"/"|"*"|EQ ;
+op: "+" { yy.plus();}
+|"-" { yy.minus();}
+|"/" { yy.div();}
+|"*" { yy.mul();}
+|EQ {yy.eq()};
 
 expList : term { yy.termExprFound($1)  } | 
 expList op term 

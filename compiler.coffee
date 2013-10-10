@@ -11,9 +11,9 @@ ex = """
          dostuff
        else
          dosomethingElse
+
        while a<3;a=a+1
          f
-
 
        """
 f = () ->
