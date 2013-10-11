@@ -92,41 +92,59 @@ class DiskotekStackMGenerator extends Compiler
   insideMethodDeff: false
   currCode:[]
   currCodeStack:[]
+  @currFuncName:''
+  @currFuncNStack:[]
   methodDeff: (name) =>
+    console.log "starting mem definition"
+    console.log '======='+name+'========'
     fcode = @functions[name] =
       code: []
     #if already in method definition
     if @insideMethodDeff
+      console.log "inside method def alerady"
       #push that scope onto stack
       @currCodeStack.push(@currCode)
+      @currFuncNStack.push(@currFuncName)
     else
       #set flag that it's method deff
       @insideMethodDeff = true
     # current code goes in new func
     @currCode = fcode.code
+    @currFuncName = name
 
   methodEnd: () =>
-    @currCode.push(()->
+    @currCode.push(()=>
       #return to prev control flow
       @progP = @stack.pop()
+      console.log "poping ppointer", @progP
     )
+    console.log 'method def ended '
+    console.log '======='+@currFuncName+'========'
+    console.log @currCode
+    console.log '--------------------------'
+
     #if there is parrent f
-    if @currCodeStack.length >0
+    if @currCodeStack.length > 0
       #next lines of code go in hers code
       @currCode = @currCodeStack.pop()
+      @currFuncName = @currFuncNStack.pop()
+      console.log 'returned to ' + @currFuncName
     else
       #code goes to global stack
+      console.log 'returned to global stack'
       @insideMethodDeff = false
       @currCode = @execCode
+      @currFuncName = ''
+
 
   methodCall: (name) =>
-
     console.log 'trying to call method %s', name
     f = @functions?[name]
     if f
       console.log "method is a func defined"
       @currCode.push(()=>
         #leave where to return
+        console.log "pushing ppointer", @progP
         @stack.push(@progP)
       )
       @progP =
@@ -165,6 +183,7 @@ class DiskotekStackMGenerator extends Compiler
 
     console.log name
   assignment: (place ,val) =>
+    console.log 'assignment of %s', val
     if @currIdent is 'memory'
       console.log 'pushing memset val %s ', val,@varAcc
       console.log @varAcc
@@ -177,30 +196,44 @@ class DiskotekStackMGenerator extends Compiler
     else
       if @currIdent of @variables
         console.log 'curr ident of var'
+        f = ((valref) ->
+
+          console.log 'setting to %s',  val
+          return ()->
+            valref = val
+        )(@variables[@currIdent].value)
+        console.log 'function to b',f
+        
+        @currCode.push (f)
 
       else
-        console.log('currIdent not of var ')
+        console.log('currIdent not of var its initialisation')
         console.log 'vars', @variables
         console.log 'adding to vars'
         @variables[@currIdent] =
           name:@currIdent
           value:0
-        @variables[@currIdent].value = val
-        ###
+ #       @variables[@currIdent].value = val
         @execCode.push ((valref) ->
 
           console.log 'setting to %s',  val
           #return ()->
           valref = val
         )(@variables[@currIdent].value)
-        ###
+
+      
+        
        console.log 'setting %s to %s', @currIdent, val
 
     console.log 'assign'
   dumpCode: ->
-    console.log @execCode
+    console.log '---------code-----------'
+    console.dir @execCode
+    console.log '--------------------'
   dumpVars: ->
-    console.log @variables
+    console.log '---------vars-----------'
+    console.dir @variables
+    console.log '--------------------'
 
 class DiskotekStackMachine
   @code:  []
@@ -220,5 +253,5 @@ console.log(beeScript.parse(ex))
 
 beeScript.yy.dumpCode()
 beeScript.yy.dumpVars()
-beeScript.yy.execCode[0]()
+#beeScript.yy.execCode[0]()
 
