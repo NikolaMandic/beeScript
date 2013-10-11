@@ -68,7 +68,13 @@ accessorList :
      DOT IDENT 
      { yy.accessor($2);}
      ;
-fieldAccess :  id accessorList { $$ = $2 };
+fieldAccess :  id accessorList %{ 
+  if($1==='memory'){
+    $$='memory'
+  }else{
+    $$ = 'field'
+  }
+%};
 
 id : IDENT { $$ = $1; yy.identFound($1); };
 
@@ -130,6 +136,6 @@ expList : term { $$ = $1; yy.termExprFound($1);  }
 term: 
 STRING {$$=yytext}
 | HDRESS {$$=yytext}
-|id {  }
+|id { $$=$1 }
 | NUMBER { $$ = $1 }
-| fieldAccess {};
+| fieldAccess { $$ = $1 };

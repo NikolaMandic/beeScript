@@ -90,7 +90,13 @@ case 3:yy.accessor($$[$0]);
 break;
 case 4: yy.accessor($$[$0]);
 break;
-case 5: this.$ = $$[$0] 
+case 5: 
+  if($$[$0-1]==='memory'){
+    this.$='memory'
+  }else{
+    this.$ = 'field'
+  }
+
 break;
 case 6: this.$ = $$[$0]; yy.identFound($$[$0]); 
 break;
@@ -138,9 +144,11 @@ case 64:this.$=yytext
 break;
 case 65:this.$=yytext
 break;
-case 66:  
+case 66: this.$=$$[$0] 
 break;
 case 67: this.$ = $$[$0] 
+break;
+case 68: this.$ = $$[$0] 
 break;
 }
 },

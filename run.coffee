@@ -4,54 +4,17 @@ ex = """
        wer = 0x0800009
        memory.wer = 'nop'
        meml = memory.wer
+       if cond
+         wer = 5
+       else
+         wer = 6
+
        def func()
          wer = 9
 
        func()
        """
-class Compiler
-  methodDeff: (name) ->
-    console.log('method def '+ name)
-
-  methodCall: (name) ->
-    console.log('method call %s', name)
-
-  methodEnd: (name) ->
-    console.log('method call %s', name)
-
-  identFound: (name) ->
-    console.log('ident found %s',name)
-
-  termExprFound: (name) ->
-    console.log('term found %s', name)
-    name
-
-  accessor: (name) ->
-    console.log('accessor found %s', name)
-
-  plus: () ->
-    console.log('+ found')
-
-  minus: () ->
-    console.log('- found')
-
-  div: () ->
-    console.log('/ found')
-
-  mul: () ->
-    console.log('* found')
-
-  newIdent: (name) ->
-    console.log 'new Identifier %s', name
-
-  eq: () ->
-    console.log 'eq found'
-
-  assignment: () ->
-    console.log 'assignment'
-
-  this
-
+Compiler = require('./compiler')
 class Error
   constructor:(@message)->
 
@@ -276,6 +239,43 @@ class DiskotekStackMGenerator extends Compiler
 
     console.log 'setting %s to %s', @currIdent, val
     console.log '----------end assign-----------'
+
+  ifSStack: []
+  elseStack: []
+  currElse:null
+  currIf:null
+  startIf:()->
+
+    if @ifSStack.length > 0
+      @ifSStack.push(@currIf)
+    @currIf = []
+    console.log 'start if'
+  endIf:()->
+    @currIf = @ifSStack.pop()
+    f = ()->
+      if not @stack.pop()
+        @progP.c+=@currIf.length
+    @currCode.push f
+
+
+    console.log 'end if'
+  startElse:()->
+    if @elseSStack.length > 0
+      @elseSStack.push(@currElse)
+    @currElse = []
+    console.log 'start if'
+
+    console.log 'start else'
+  endElse:()->
+    @currElse = @elseSStack.pop()
+    f = ()->
+      if not @stack.pop()
+        @progP.c+=@currIf.length
+    @currCode.push f
+
+
+    console.log 'end else'
+
   end:->
     #@execCode[-1..]=@currCode
   dumpCode: ->
