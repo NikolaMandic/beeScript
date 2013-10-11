@@ -105,8 +105,13 @@ expSList: expSList sep expList | condition;
 sep: ANY;
 funcSig : IDENT "(" ")";
 funcSig : IDENT "(" expList ")";
-ifs: IF condition NEWLINE statementList ;
-ife: IF condition NEWLINE statementList ELSE NEWLINE statementList ;
+
+ifs: IF condition ifStatementsStart statementList { yy.endIf() } ;
+ifStatementsStart: NEWLINE { yy.startIf() };
+
+ife: ifs ELSE  elseStatementsStart statementList { yy.endElse(); } ;
+elseStatementsStart: NEWLINE {yy.startElse(); };
+
 condition: expList | expList cop expList;
 arg : expList ;
 cop : "==" | "!=" | "&&" | "||" |  "<" | ">";
