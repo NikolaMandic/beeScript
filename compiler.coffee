@@ -3,6 +3,7 @@ beeScript = beeScript.parser
 ex = """
        wer = 0x0800009
        memory.wer = 'nop'
+       meml = memory.wer
        def func()
          wer = 9
 
@@ -58,6 +59,7 @@ class Error
 diskotekLib =
   memset: (address,val)->
     console.log 'setting %s to %s', address,val
+  readmem: (addr)->
 
 
 
@@ -93,7 +95,7 @@ class DiskotekStackMGenerator extends Compiler
     if @insideMethodDeff
       console.log "inside method def alerady"
       #push that scope onto stack
-      
+
       @currCodeStack.push(@currCode)
       @currCode=[]
       @currFuncNStack.push(@currFuncName)
@@ -181,11 +183,13 @@ class DiskotekStackMGenerator extends Compiler
         @varAcc = @variables[name]
         console.log @varAcc,' is on'
       else
+        throw new Error('accessing memory with undefined variable')
+        ###
         @variables.name=
           name:name
           value:0
         console.log 'is off', @varAcc
-
+        ###
 
 
     console.log name
@@ -194,7 +198,7 @@ class DiskotekStackMGenerator extends Compiler
     console.log '-------assign---------'
 
     console.log 'assignment of %s to %s', val ,@currIdent
-    if @currIdent is 'memory'
+    if place is 'memory'
       console.log 'pushing memset val %s ', val,@varAcc
       console.log @varAcc
       f = ((valref) ->
@@ -204,36 +208,73 @@ class DiskotekStackMGenerator extends Compiler
 
       @currCode.push f
     else
-      if @currIdent of @variables
+      if place of @variables
         console.log 'curr ident of var'
-        f = ((valref) ->
-
-          console.log 'setting to %s',  val
-          return ()->
-            valref = val
-        )(@variables[@currIdent].value)
-        console.log 'function to b',f
-
-        @currCode.push (f)
-
       else
         console.log('currIdent not of var its initialisation')
         console.log 'vars', @variables
         console.log 'adding to vars'
-        @variables[@currIdent] =
-          name:@currIdent
+        @variables[place] =
+          name:place
           value:0
- #       @variables[@currIdent].value = val
-        @currCode.push ((valref) =>
 
-          console.log 'pushing %s =  %s', @currIdent, val
+      if val is 'memory'
+        console.log 'rhs is memory',@varAcc
+
+        #insert instruction for reading memory
+        console.log "read memory instruction",val,@varAcc
+        f = ((valref) ->
+
+          console.log 'setting to %s',  val
           return ()->
+            cd=
+              memaddres:valref
+        )(@variables[@varAcc.name].value)
+        @currCode.push f
+        #store read result in lhs
+        console.log 'inserting store inst',place
+        f = ((valref) ->
+
+          console.log 'setting to %s',  val
+          return ()->
+
+            # if val is 'memory'
+            #valref = diskotekLib.readmem(@varAcc.value)
+            # else
+            valref=@stack.pop()
+        )(@variables[place].value)
+        @currCode.push f
+
+      else
+        f = ((valref) ->
+
+          console.log 'setting to %s',  val
+          return ()->
+            # if val is 'memory'
+            #valref = diskotekLib.readmem(@varAcc.value)
+            # else
             valref = val
         )(@variables[@currIdent].value)
 
+        @currCode.push (f)
+        console.log 'function to b',f
+
+    ###
+        @variables[@currIdent].value = val
+        if val is 'memory'
+          console.log 'rhs is memory'
+          @currCode.push(@varAcc.value)
+        else
+          @currCode.push ((valref) =>
+
+            console.log 'pushing %s =  %s', @currIdent, val
+            return ()->
+              valref = val
+          )(@variables[@currIdent].value)
+    ###
 
 
-       console.log 'setting %s to %s', @currIdent, val
+    console.log 'setting %s to %s', @currIdent, val
     console.log '----------end assign-----------'
   end:->
     #@execCode[-1..]=@currCode
@@ -282,15 +323,26 @@ class Runner
   next: () =>
     console.log '---intsr---'
     console.log @progP
-    @progP.block[@progP.c++].bind(this)()
+    ni = @progP.block[@progP.c++]
+
+    r = ni.bind(this)()
+    console.log(r)
+    if r?.memaddres?
+      console.log 'exiting for reading memory'
+      diskotekLib.readmem(ni)
+      return 2
     console.log @progP
 
     console.log '---end intsr---'
-    @progP.block.length > @progP.c
+    1 if @progP.block.length > @progP.c
   run: () =>
     console.log 'started to run'
-    while @next()
+    while (v=@next()) is 1
       console.log @progP.block[@progP.c]
+
+  continue:()=>
+    run()
+
 rn = new Runner beeScript.yy
 rn.run()
 
