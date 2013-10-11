@@ -122,26 +122,27 @@ class DiskotekStackMGenerator extends Compiler
   methodCall: (name) =>
 
     console.log 'trying to call method %s', name
-    @currCode.push(()=>
-      #leave where to return
-      @stack.push(@progP)
-
-    )
     f = @functions?[name]
     if f
+      console.log "method is a func defined"
+      @currCode.push(()=>
+        #leave where to return
+        @stack.push(@progP)
+      )
       @progP =
         c:0
         block: f.code
+      console.log "pushed entry and changed ppointer"
     else
-      console.log f
+      console.log 'trying to search in lib'
       f = diskotekLib?[name] ?  null
       # throw new Error("no function with the name of"+name)
-    if f
-      cf=f.bind(this,@currArgs)
-      @currCode.push(cf)
-      console.log 'method %s in code', name
-    else
-      console.log 'method %s not found', name
+      if f
+        cf=f.bind(this,@currArgs)
+        @currCode.push(cf)
+        console.log 'method %s from lib just inserted in code', name
+      else
+        console.log 'method %s not found', name
 
   identFound : (name) =>
     @currIdent = name
