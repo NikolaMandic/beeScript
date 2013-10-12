@@ -35,7 +35,8 @@ class Compiler
 
   eq: () ->
     console.log 'eq found'
-
+  condition: () ->
+    console.log 'condtion found'
   assignment: () ->
     console.log 'assignment'
   startIf:()->
