@@ -99,7 +99,9 @@ bs: NEWLINE;
 argL: expList ANY argL|expList;
 expressionStatement : assignment | fieldAccess |  NUMBER
 ;
-whiles : WHILE expSList NEWLINE statementList ;
+
+whiles : WHILE expSList whileStart statementList { yy.endWhile();};
+whileStart: NEWLINE { yy.startWhile(); };
 
 expSList: expSList sep expList | condition;
 sep: ANY;

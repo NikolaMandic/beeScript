@@ -35,6 +35,10 @@ class Compiler
 
   eq: () ->
     console.log 'eq found'
+  startWhile: ()->
+    console.log 'start while'
+  endWhile: ()->
+    console.log 'end while'
   condition: () ->
     console.log 'condtion found'
   assignment: () ->

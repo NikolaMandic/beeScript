@@ -166,7 +166,10 @@ class DiskotekStackMGenerator extends Compiler
           @stack.push false
           console.log 'pushing to stack false'
     )(term)
-
+  startWhile: ()->
+    console.log 'start while'
+  endWhile: ()->
+    console.log 'end while'
   termExprFound:(term)=>
     #push terminal on stack
     @currCode.push ((v)->
