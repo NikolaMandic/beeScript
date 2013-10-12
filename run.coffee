@@ -1,9 +1,6 @@
 beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
-       wer = 0x0800009
-       memory.wer = 'nop'
-       meml = memory.wer
        if cond
          wer = 5
        else
@@ -11,7 +8,8 @@ ex = """
 
        def func()
          wer = 9
-
+         
+       meml = memory.wer
        func()
        """
 Compiler = require('./compiler')
@@ -241,40 +239,64 @@ class DiskotekStackMGenerator extends Compiler
     console.log '----------end assign-----------'
 
   ifSStack: []
-  elseStack: []
   currElse:null
+  elseSStack:[]
   currIf:null
-  startIf:()->
+  oldCCode:null
+  blockStack:[]
+  startIf:()=>
+    
+    #make new block
+    #old code should be pushed in block stack
+    @blockStack.push @currCode
+    @currCode = []
+ 
 
-    if @ifSStack.length > 0
-      @ifSStack.push(@currIf)
-    @currIf = []
-    console.log 'start if'
-  endIf:()->
-    @currIf = @ifSStack.pop()
-    f = ()->
-      if not @stack.pop()
-        @progP.c+=@currIf.length
-    @currCode.push f
+    console.log 'start if', @blockStack
+  endIf:()=>
 
+    console.log 'code after if ', @currCode
+    #insert jump around on start of block
+    @currCode.unshift ((l)->
+      ()->
+        console.log 'jumping over if block'
+        @stack.pop() ? @progP.c=@progP.c+l
+    )(@currCode.length)
 
-    console.log 'end if'
-  startElse:()->
-    if @elseSStack.length > 0
-      @elseSStack.push(@currElse)
-    @currElse = []
-    console.log 'start if'
+    #restore prev block
+    @oldCode = @blockStack.pop()
 
-    console.log 'start else'
-  endElse:()->
-    @currElse = @elseSStack.pop()
-    f = ()->
-      if not @stack.pop()
-        @progP.c+=@currIf.length
-    @currCode.push f
+    #append current code to prev block
+    @oldCode[-1..0]=@currCode
 
+    console.log 'code after if ', @oldCode
+    @currCode=@oldCode
+    console.log 'end if', @blockStack
+  startElse:()=>
+ 
+    #make new block save old one
+    @blockStack.push @currCode
+    @currCode = []
+    
 
-    console.log 'end else'
+    console.log 'start else', @blockStack
+  endElse:()=>
+
+    #insert jump around at the end of the if block
+    console.log @blockStack,@blockStack[@blockStack.length-1]
+    (@blockStack[@blockStack.length-1]).push ((l)->
+      ()->
+        console.log 'jumping over else block'
+        @progP.c=@progP.c+l
+    )(@currCode.length)
+    #restore prev block
+    @oldCode = @blockStack.pop()
+
+    #append current code to prev block
+    @oldCode[-1..0]=@currCode
+    @currCode=@oldCode
+
+    console.log 'end else', @blockStack
 
   end:->
     #@execCode[-1..]=@currCode
