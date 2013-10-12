@@ -167,8 +167,52 @@ class DiskotekStackMGenerator extends Compiler
           console.log 'pushing to stack false'
     )(term)
   startWhile: ()->
+    @blockStack.push @currCode
+    @currCode = []
+
     console.log 'start while'
   endWhile: ()->
+    #insert condition testing
+    #
+
+    console.log 'code after while ', @currCode
+    #insert loop
+    #-1
+    #-2
+    #-
+    @currCode.push ((l)->
+      ()->
+        s = @stack.pop()
+        console.log s
+        if s is off
+          console.log 'jumping over if block'
+          @progP.c=@progP.c-l-1 #1 for instr bellow
+        else
+          console.log 'into if'
+    )(@currCode.length)
+
+    #insert jump around on start of block
+    @currCode.unshift ((l)->
+      ()->
+        s = @stack.pop()
+        console.log s
+        if s is off
+          console.log 'jumping over if block'
+          @progP.c=@progP.c+l
+        else
+          console.log 'into if'
+    )(@currCode.length)
+
+    #restore prev block
+    @oldCode = @blockStack.pop()
+
+    #append current code to prev block
+    @oldCode[-1..0]=@currCode
+
+    console.log 'code after while ', @oldCode
+    @currCode=@oldCode
+    console.log 'end while', @blockStack
+
     console.log 'end while'
   termExprFound:(term)=>
     #push terminal on stack
