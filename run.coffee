@@ -1,14 +1,14 @@
 beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
-       if cond
+       if 0
          wer = 5
        else
          wer = 6
 
        def func()
          wer = 9
-         
+
        meml = memory.wer
        func()
        """
@@ -154,6 +154,26 @@ class DiskotekStackMGenerator extends Compiler
 
 
     console.log name
+  condition:(term)=>
+    #todo expand
+ 
+    @currCode.push ((v)->
+      return ()->
+        if @stack.pop() not in [0, ""]
+          @stack.push true
+          console.log 'pushing to stack true'
+        else
+          @stack.push false
+          console.log 'pushing to stack false'
+    )(term)
+
+  termExprFound:(term)=>
+    #push terminal on stack
+    @currCode.push ((v)->
+      return ()->
+        console.log 'pushing term'
+        @stack.push v
+    )(term)
   assignment: (place ,val) =>
 
     console.log '-------assign---------'
@@ -245,12 +265,12 @@ class DiskotekStackMGenerator extends Compiler
   oldCCode:null
   blockStack:[]
   startIf:()=>
-    
+
     #make new block
     #old code should be pushed in block stack
     @blockStack.push @currCode
     @currCode = []
- 
+
 
     console.log 'start if', @blockStack
   endIf:()=>
@@ -259,8 +279,13 @@ class DiskotekStackMGenerator extends Compiler
     #insert jump around on start of block
     @currCode.unshift ((l)->
       ()->
-        console.log 'jumping over if block'
-        @stack.pop() ? @progP.c=@progP.c+l
+        s = @stack.pop()
+        console.log s
+        if s is off
+          console.log 'jumping over if block'
+          @progP.c=@progP.c+l
+        else
+          console.log 'into if'
     )(@currCode.length)
 
     #restore prev block
@@ -273,11 +298,11 @@ class DiskotekStackMGenerator extends Compiler
     @currCode=@oldCode
     console.log 'end if', @blockStack
   startElse:()=>
- 
+
     #make new block save old one
     @blockStack.push @currCode
     @currCode = []
-    
+
 
     console.log 'start else', @blockStack
   endElse:()=>

@@ -112,7 +112,8 @@ ifStatementsStart: NEWLINE { yy.startIf() };
 ife: ifs ELSE  elseStatementsStart statementList { yy.endElse(); } ;
 elseStatementsStart: NEWLINE {yy.startElse(); };
 
-condition: expList | expList cop expList;
+condition: expList { yy.condition($1) }
+| expList cop expList;
 arg : expList ;
 cop : "==" | "!=" | "&&" | "||" |  "<" | ">";
 argList : arg | argCommaList;
@@ -141,6 +142,6 @@ expList : term { $$ = $1; yy.termExprFound($1);  }
 term: 
 STRING {$$=yytext}
 | HDRESS {$$=yytext}
-|id { $$=$1 }
+| id { $$=$1 }
 | NUMBER { $$ = $1 }
 | fieldAccess { $$ = $1 };

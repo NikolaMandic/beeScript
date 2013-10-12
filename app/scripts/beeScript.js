@@ -126,6 +126,8 @@ case 40: yy.endElse();
 break;
 case 41:yy.startElse(); 
 break;
+case 42: yy.condition($$[$0]) 
+break;
 case 55: yy.assignment($$[$0-2],$$[$0]) 
 break;
 case 56:  yy.newIdent($$[$0]);
