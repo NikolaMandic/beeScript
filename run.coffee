@@ -2,7 +2,9 @@ beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
        a=5
-       a=a+1
+       while a
+         a=a-1
+
        """
 Compiler = require('./compiler')
 class Error
@@ -158,12 +160,19 @@ class DiskotekStackMGenerator extends Compiler
           @stack.push false
           console.log 'pushing to stack false'
     )(term)
-  startWhile: ()->
+  startWhileExpr:()=>
+    console.log 'while starts at % ',@whileExpStart = @currCode.length
+
+
+
+  startWhile: ()=>
+    console.log 'while length %s',
+    @whileExpLength = @currCode.length-@whileExpStart
+
     @blockStack.push @currCode
     @currCode = []
-
     console.log 'start while'
-  endWhile: ()->
+  endWhile: ()=>
     #insert condition testing
     #
 
@@ -174,26 +183,26 @@ class DiskotekStackMGenerator extends Compiler
     #-
     @currCode.push ((l)->
       ()->
-        s = @stack.pop()
-        console.log s
-        if s is off
-          console.log 'jumping over while block'
-          @progP.c=@progP.c-l-1 #1 for instr bellow
-        else
-          console.log 'into while'
-    )(@currCode.length)
+        #s = @stack.pop()
+        #console.log s
+        #if s is off
+        #  console.log 'jumping over while block'
+        @progP.c=@progP.c-l-1 #1 for instr bellow
+        # else
+        #  console.log 'into while'
+    )(@currCode.length+@whileExpLength)
 
     #insert jump around on start of block
     @currCode.unshift ((l)->
-      ()->
+      return ()->
         s = @stack.pop()
         console.log s
-        if s is off
-          console.log 'jumping over if block'
+        if s is 0
+          console.log 'jumping over if block for ',l
           @progP.c=@progP.c+l
         else
           console.log 'into if'
-    )(@currCode.length)
+    )(@currCode.length+@whileExpLength)
 
     #restore prev block
     @oldCode = @blockStack.pop()
@@ -218,20 +227,20 @@ class DiskotekStackMGenerator extends Compiler
         @currCode.push ()->
           v1 = @stack.pop()
           v2 = @stack.pop()
-          console.log 'adding %s - %s',v1,v2
-          @stack.push(v2+v1)
+          console.log 'adding %s - %s',v2,v1
+          @stack.push(v2-v1)
       when @div
         @currCode.push ()->
           v1 = @stack.pop()
           v2 = @stack.pop()
           console.log 'adding %s * %s',v1,v2
-          @stack.push(v2+v1)
+          @stack.push(v2*v1)
       when @mul
         @currCode.push ()->
           v1 = @stack.pop()
           v2 = @stack.pop()
           console.log 'adding %s / %s',v1,v2
-          @stack.push(v2+v1)
+          @stack.push(v2/v1)
 
 ##
 #      0 0

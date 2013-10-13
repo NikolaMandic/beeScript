@@ -100,7 +100,10 @@ argL: expList ANY argL|expList;
 expressionStatement : assignment | fieldAccess |  NUMBER
 ;
 
-whiles : WHILE expSList whileStart statementList { yy.endWhile();};
+whiles : whkw expSList whileStart statementList { yy.endWhile();};
+
+whkw:WHILE {yy.startWhileExpr();};
+
 whileStart: NEWLINE { yy.startWhile(); };
 
 expSList: expSList sep expList | condition;
