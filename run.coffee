@@ -5,6 +5,8 @@ ex = """
        while a
          a=a-1
 
+       a=3
+       a=5
        """
 Compiler = require('./compiler')
 class Error
@@ -200,9 +202,11 @@ class DiskotekStackMGenerator extends Compiler
         if s is 0
           console.log 'jumping over if block for ',l
           @progP.c=@progP.c+l
+          #-1 because c is incremented in "next" f
+          #-1 for this intr
         else
           console.log 'into if'
-    )(@currCode.length+@whileExpLength)
+    )(@currCode.length)
 
     #restore prev block
     @oldCode = @blockStack.pop()
