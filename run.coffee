@@ -1,16 +1,8 @@
 beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
-       if 0
-         wer = 5
-       else
-         wer = 6
-
-       def func()
-         wer = 9
-
-       meml = memory.wer
-       func()
+       a=5
+       a=a+1
        """
 Compiler = require('./compiler')
 class Error
@@ -156,7 +148,7 @@ class DiskotekStackMGenerator extends Compiler
     console.log name
   condition:(term)=>
     #todo expand
- 
+
     @currCode.push ((v)->
       return ()->
         if @stack.pop() not in [0, ""]
@@ -185,10 +177,10 @@ class DiskotekStackMGenerator extends Compiler
         s = @stack.pop()
         console.log s
         if s is off
-          console.log 'jumping over if block'
+          console.log 'jumping over while block'
           @progP.c=@progP.c-l-1 #1 for instr bellow
         else
-          console.log 'into if'
+          console.log 'into while'
     )(@currCode.length)
 
     #insert jump around on start of block
@@ -214,13 +206,70 @@ class DiskotekStackMGenerator extends Compiler
     console.log 'end while', @blockStack
 
     console.log 'end while'
+  opFound:(op)=>
+    switch op
+      when @plus
+        @currCode.push ()->
+          v1 = @stack.pop()
+          v2 = @stack.pop()
+          console.log 'adding %s + %s',v1,v2
+          @stack.push(v2+v1)
+      when @minus
+        @currCode.push ()->
+          v1 = @stack.pop()
+          v2 = @stack.pop()
+          console.log 'adding %s - %s',v1,v2
+          @stack.push(v2+v1)
+      when @div
+        @currCode.push ()->
+          v1 = @stack.pop()
+          v2 = @stack.pop()
+          console.log 'adding %s * %s',v1,v2
+          @stack.push(v2+v1)
+      when @mul
+        @currCode.push ()->
+          v1 = @stack.pop()
+          v2 = @stack.pop()
+          console.log 'adding %s / %s',v1,v2
+          @stack.push(v2+v1)
+
+##
+#      0 0
+#  0 0
+#0
   termExprFound:(term)=>
+    console.log 'term expr found', term
     #push terminal on stack
-    @currCode.push ((v)->
-      return ()->
-        console.log 'pushing term'
-        @stack.push v
-    )(term)
+    ###
+    'string',
+    'hdress',
+    'id',
+    'num',
+    'faccess',
+    ###
+    type=term.type
+
+    switch type
+      when "id"
+        @currCode.push ((v)->
+          return ()->
+            console.log 'pushing variable %s = %s', v,@variables[v].value
+            @stack.push @variables[v].value
+        )(term.val)
+      when 'num'
+
+        @currCode.push ((v)->
+          return ()->
+            console.log 'pushing term ',v
+            @stack.push parseInt(v,10)
+        )(term.val)
+      else
+        @currCode.push ((v)->
+          return ()->
+            console.log 'pushing term ',v
+            @stack.push v
+        )(term.val)
+    console.log 'current code after term push' ,@currCode
   assignment: (place ,val) =>
 
     console.log '-------assign---------'
@@ -236,6 +285,7 @@ class DiskotekStackMGenerator extends Compiler
 
       @currCode.push f
     else
+      #this after this place will be in variables
       if place of @variables
         console.log 'curr ident of var'
       else
@@ -256,8 +306,8 @@ class DiskotekStackMGenerator extends Compiler
           console.log 'setting to %s',  val
           return ()->
             cd=
-              memaddres:valref
-        )(@variables[@varAcc.name].value)
+              memaddres:valref.value
+        )(@variables[@varAcc.name])
         @currCode.push f
         #store read result in lhs
         console.log 'inserting store inst',place
@@ -265,28 +315,47 @@ class DiskotekStackMGenerator extends Compiler
 
           console.log 'setting to %s',  val
           return ()->
-
+            r = @stack.pop()
+            console.log 'assignment result is', r
             # if val is 'memory'
             #valref = diskotekLib.readmem(@varAcc.value)
             # else
-            valref=@stack.pop()
-        )(@variables[place].value)
+            valref.value=r
+        )(@variables[place])
         @currCode.push f
 
       else
+        #if rhs not memory
+
+        ###
+        if val of @variables
+          f = ((valref) ->
+
+            console.log 'setting to %s',  val
+            return ()->
+              # if val is 'memory'
+              #valref = diskotekLib.readmem(@varAcc.value)
+              # else
+              valref = val
+          )(@variables[val].value)
+
+          console.log 'function to b',f
+        else
+        ###
         f = ((valref) ->
 
           console.log 'setting to %s',  val
           return ()->
+            r = @stack.pop()
+            console.log 'assignment result is', r
             # if val is 'memory'
             #valref = diskotekLib.readmem(@varAcc.value)
             # else
-            valref = val
-        )(@variables[@currIdent].value)
+            valref.value=r
+
+        )(@variables[place])
 
         @currCode.push (f)
-        console.log 'function to b',f
-
     ###
         @variables[@currIdent].value = val
         if val is 'memory'
@@ -371,7 +440,7 @@ class DiskotekStackMGenerator extends Compiler
     console.log 'end else', @blockStack
 
   end:->
-    #@execCode[-1..]=@currCode
+    @execCode[-1..]=@currCode
   dumpCode: ->
     console.log '---------code-----------'
     console.dir @execCode

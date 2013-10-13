@@ -130,6 +130,26 @@ id
 ;
 assignment : id EQ expList { yy.assignment($1,$3) };
 
+
+expr: pm ;
+pm: dm pmop pm { yy.opFound($2)}
+| dm {}
+;
+dm: term dmop dm { yy.opFound($2) }
+| term {$$=$1; yy.termExprFound($1)} ; 
+pmop:
+"+" {$$=yy.plus}
+|"-" {$$=yy.minus}
+;
+dmop:
+"/" {$$=yy.div}
+|"*"{$$=yy.mul}
+;
+
+expList:pm;
+/*
+3*2*3+4+4*4
+
 op: "+" { yy.plus;}
 |"-" { yy.minus;}
 |"/" { yy.div;}
@@ -141,9 +161,34 @@ expList : term { $$ = $1; yy.termExprFound($1);  }
 |"(" expList op term ")" { $$ = $2($1,$2)  }
 
 ;
-term: 
-STRING {$$=yytext}
-| HDRESS {$$=yytext}
-| id { $$=$1 }
-| NUMBER { $$ = $1 }
-| fieldAccess { $$ = $1 };
+*/
+
+term: STRING %{ $$={ type:'string',
+               val: yytext
+             }
+           //  yy.stringtermfound(yytext);
+%}
+| HDRESS  %{ $$={ type:'hdress',
+               val: yytext
+               }
+           //  yy.hdresstermfound(yytext);
+
+%}
+| id   %{ $$={ type:'id',
+               val: $1
+              }
+
+            // yy.idtermfound($1);
+%}
+| NUMBER    %{ $$={ type:'num',
+               val: $1
+               }
+
+            // yy.numbertermfound($1);
+%}
+| fieldAccess   %{ $$={ type:'faccess',
+               val: $1
+               }
+
+            // yy.fatermfound($1);
+%};
