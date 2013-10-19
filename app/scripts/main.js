@@ -1,7 +1,13 @@
 require.config({
+    packages:[{
+      name:'ace',
+      location:'../bower_components/ace/lib/ace/',
+      main:'ace'
+    }],
     paths: {
         
         jquery: '../bower_components/jquery/jquery',
+        scripts: '../bower_components/ace/lib/ace/ace',
         bootstrapAffix: '../bower_components/sass-bootstrap/js/affix',
         bootstrapAlert: '../bower_components/sass-bootstrap/js/alert',
         bootstrapButton: '../bower_components/sass-bootstrap/js/button',
@@ -55,8 +61,12 @@ require.config({
     }
 });
 
-require(['app', 'jquery','beeScript'], function (app, $,bs) {
-   
+require(['app', 'jquery','beeScript','ace'], function (app, $,bs,ace) {
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+  
     // use app here 
     var ex='a = (3+3)*4\n'+
             'sdfsd(sdf.a)\n'+
