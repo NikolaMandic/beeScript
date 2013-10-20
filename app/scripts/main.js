@@ -1,7 +1,7 @@
 require.config({
     packages:[{
       name:'ace',
-      location:'../bower_components/ace/lib/ace/',
+      location:'../bower_components/ace/lib/ace',
       main:'ace'
     }],
     paths: {
@@ -65,7 +65,7 @@ require(['app', 'jquery','beeScript','ace'], function (app, $,bs,ace) {
 
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode("ace/mode/beeScript");
   
     // use app here 
     var ex='a = (3+3)*4\n'+
