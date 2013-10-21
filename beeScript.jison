@@ -15,6 +15,7 @@
 "." return 'DOT'
 "||" return '||'
 "&&" return '&&'
+"," return ','
 "==" return '=='
 "!=" return '!='
 "=" return 'EQ'
@@ -85,18 +86,18 @@ statement: expressionStatement
 | whiles
 | ife
 | id "(" ")" { yy.methodCall($1); }
-| id "(" argL ")" { yy.methodCall($1); }
-| fieldAccess "(" argL ")" { yy.methodCall($1); }
+| id "(" argList ")" { yy.methodCall($1); }
+| fieldAccess "(" argList ")" { yy.methodCall($1); }
 | fieldAccess "(" ")" { yy.methodCall($1); }
 | ms  "(" ")" bs statementList  { yy.methodEnd(); }
-| ms "(" expList ")" bs statementList { yy.methodEnd(); }
-| ms fa "(" expList ")" bs statementList { yy.methodEnd(); }
+| ms "(" argListD ")" bs statementList { yy.methodEnd(); }
+| ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" ")" bs statementList { yy.methodEnd(); }
 ;
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
 bs: NEWLINE;
-argL: expList ANY argL|expList;
+argL: expr ANY argL|expList;
 expressionStatement : assignment | fieldAccess |  NUMBER
 ;
 
@@ -119,11 +120,16 @@ elseStatementsStart: NEWLINE {yy.startElse(); };
 
 condition: expList { yy.condition($1) }
 | expList cop expList;
-arg : expList ;
+arg : expr{ yy.argFound($1); } ;
 cop : "==" | "!=" | "&&" | "||" |  "<" | ">";
-argList : arg | argCommaList;
-argCommaList : "," arg | "," argCommaList;
+argList : arg | arg argCommaList;
+argCommaList : "," arg  
+| "," arg argCommaList;
 
+argListD : argD | argCommaListD;
+argCommaListD : "," argD
+| "," argD argCommaListD;
+argD:IDENT{yy.argDFound($1);};
 
 assignment : 
 fieldAccess EQ expList { yy.assignment($1,$3) }

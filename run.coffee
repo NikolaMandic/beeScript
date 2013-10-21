@@ -1,12 +1,11 @@
 beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
-       a=5
-       while a
-         a=a-1
+       def f (x,y) 
+         return x*y
 
-       a=3
-       a=5
+       a=f(1,2)
+       
        """
 Compiler = require('./compiler')
 class Error
@@ -28,6 +27,8 @@ class DiskotekStackMGenerator extends Compiler
 
   execCode: []
   currArgs:[]
+  currArgsD:{}
+  currArgC:0
   currIdent:''
   variables : {}
   stack:[]
@@ -43,11 +44,16 @@ class DiskotekStackMGenerator extends Compiler
   currCodeStack:[]
   currFuncName:''
   currFuncNStack:[]
+  argFound: (arg) =>
+    @currArgC+=1
   methodDeff: (name) =>
+    @currArgsD={}
     console.log "starting mem definition"
     console.log '======='+name+'========'
     fcode = @functions[name] =
       code: []
+      args:{}
+      argc:0
     #if already in method definition
     if @insideMethodDeff
       console.log "inside method def alerady"
@@ -67,8 +73,12 @@ class DiskotekStackMGenerator extends Compiler
     # current code goes in new func
     @currCode = fcode.code
     @currFuncName = name
-
+  argDFound:(arg)=>
+    @currArgsD[arg]=null
+    @currArgDC+=1
   methodEnd: () =>
+    @functions[@currFuncName].argc=@currArgDC
+    @functions[@currFuncName].args=@currArgsD
     @currCode.push(()->
       #return to prev control flow
       oldP = @stack.pop()
@@ -124,6 +134,14 @@ class DiskotekStackMGenerator extends Compiler
       if f
         cf=f.bind(this,@currArgs)
         @currCode.push(cf)
+        ###
+        @currCode.push((name)->
+          ()->
+            argsSI=@stack.length-@currArgs.length
+            args = @stack.splice(argsSI,@currArgs.length)
+            @diskotekLib[name].apply(this,args)
+        )(name)
+        ###
         console.log 'method %s from lib just inserted in code', name
       else
         console.log 'method %s not found', name
@@ -490,6 +508,7 @@ class Runner
     @execCode = generator.execCode
     @functions = generator.functions
     @progP.block = generator.execCode
+    @diskotekLib = diskotekLib
   stack:[]
   variables:[]
   execCode:[]
@@ -505,7 +524,7 @@ class Runner
     console.log(r)
     if r?.memaddres?
       console.log 'exiting for reading memory'
-      diskotekLib.readmem(ni)
+      @diskotekLib.readmem(ni)
       return 2
     console.log @progP
 
@@ -520,9 +539,9 @@ class Runner
     run()
 
 rn = new Runner beeScript.yy
-rn.run()
+#rn.run()
 
-
+module.exports = rn
 
 #beeScript.yy.execCode[0]()
 
