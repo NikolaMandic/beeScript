@@ -1,10 +1,11 @@
 beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
-       def f (x,y) 
+       def f (x,y)
          x+y
 
        a=f(1,2)
+       memory.a=5
        """
 Compiler = require('./compiler')
 class Error
@@ -13,7 +14,7 @@ class Error
 
 diskotekLib =
   memset: (address,val)->
-    console.log 'setting %s to %s', address,val
+    console.log 'setting %s to ', address,val
   readmem: (addr)->
 
 
@@ -299,11 +300,13 @@ class DiskotekStackMGenerator extends Compiler
             @stack.push parseInt(v,10)
         )(term.val)
       else
-        @currCode.push ((v)->
-          return ()->
-            console.log 'pushing term ',v
-            @stack.push v
-        )(term.val)
+        if not @functions[term]
+
+          @currCode.push ((v)->
+            return ()->
+              console.log 'pushing term ',v
+              @stack.push v
+          )(term.val)
     console.log 'current code after term push' ,@currCode
   assignment: (place ,val) =>
 
@@ -311,12 +314,15 @@ class DiskotekStackMGenerator extends Compiler
 
     console.log 'assignment of %s to %s', val ,@currIdent
     if place is 'memory'
-      console.log 'pushing memset val %s ', val,@varAcc
+      console.log 'pushing memset val ', val,@varAcc
       console.log @varAcc
       f = ((valref) ->
         console.log diskotekLib
-        diskotekLib.memset.bind this, valref , val
-      )(@varAcc.value)
+        ()->
+          val = @stack.pop()
+          console.log val,valref.value
+          @diskotekLib.memset(valref.value , val)
+      )(@varAcc)
 
       @currCode.push f
     else
@@ -475,7 +481,7 @@ class DiskotekStackMGenerator extends Compiler
     console.log 'end else', @blockStack
 
   end:->
-    @execCode[-1..0]=@currCode
+   # @execCode[-1..0]=@currCode
   dumpCode: ->
     console.log '---------code-----------'
     console.dir @execCode
@@ -528,6 +534,7 @@ class Runner
 
     r = ni.bind(this)()
     console.log 'result of a f call',r
+    console.log 'stack dump after instr', @stack
     if r?.memaddres?
       console.log 'exiting for reading memory'
       @diskotekLib.readmem(ni)

@@ -94,7 +94,7 @@ ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
 bs: NEWLINE;
 argL: expr ANY argL|expList;
-expressionStatement : IDENT EQ expr |  expr
+expressionStatement : assignment |  expr
 ;
 
 whiles : whkw expSList whileStart statementList { yy.endWhile();};
@@ -128,12 +128,12 @@ argCommaListD : "," argD
 argD:IDENT{yy.argDFound($1);};
 
 assignment : 
-fieldAccess EQ expList { yy.assignment($1,$3) }
-|
-id 
-{  yy.newIdent($1);}
+fieldAccess EQ expr { yy.assignment($1,$3) }
+//|
+//id 
+//{  yy.newIdent($1);}
 ;
-assignment : id EQ expList { yy.assignment($1,$3) };
+assignment : id EQ expr { yy.assignment($1,$3) };
 
 
 expr: pm ;
