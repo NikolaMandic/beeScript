@@ -65,7 +65,7 @@ class DiskotekStackMGenerator extends Compiler
     else
       #set flag that it's method deff
       console.log 'current code before method def',@currCode
-      @execCode[-1..]=@currCode
+      @execCode[-1..0]=@currCode
       #@currCodeStack.push(@currCode)
       @currFuncNStack.push(@currFuncName)
       @currCode=[]
@@ -85,6 +85,7 @@ class DiskotekStackMGenerator extends Compiler
 
       @progP.c = oldP.c
       @progP.block = oldP.block
+      #@progP.args = oldP.args
       @currArgs = oldP.args
       console.log "poping ppointer", @progP
     )
@@ -125,7 +126,7 @@ class DiskotekStackMGenerator extends Compiler
         @callStack.push(oldP)
         @progP.c=0
         @progP.block=f.code
-        @currArgs=f.args
+        @currArgs[arg]=@stack.pop() for arg, val of f.args
       )
       console.log "pushed entry current code",@currCode
     else
@@ -474,7 +475,7 @@ class DiskotekStackMGenerator extends Compiler
     console.log 'end else', @blockStack
 
   end:->
-    @execCode[-1..]=@currCode
+    @execCode[-1..0]=@currCode
   dumpCode: ->
     console.log '---------code-----------'
     console.dir @execCode
@@ -526,7 +527,7 @@ class Runner
     ni = @progP.block[@progP.c++]
 
     r = ni.bind(this)()
-    console.log(r)
+    console.log 'result of a f call',r
     if r?.memaddres?
       console.log 'exiting for reading memory'
       @diskotekLib.readmem(ni)
