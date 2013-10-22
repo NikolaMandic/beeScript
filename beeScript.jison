@@ -85,10 +85,6 @@ statement: expressionStatement
 | ifs
 | whiles
 | ife
-| id "(" ")" { yy.methodCall($1); }
-| id "(" argList ")" { yy.methodCall($1); }
-| fieldAccess "(" argList ")" { yy.methodCall($1); }
-| fieldAccess "(" ")" { yy.methodCall($1); }
 | ms  "(" ")" bs statementList  { yy.methodEnd(); }
 | ms "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
@@ -98,7 +94,7 @@ ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
 bs: NEWLINE;
 argL: expr ANY argL|expList;
-expressionStatement : assignment | fieldAccess |  NUMBER
+expressionStatement : IDENT EQ expr |  expr
 ;
 
 whiles : whkw expSList whileStart statementList { yy.endWhile();};
@@ -110,7 +106,7 @@ whileStart: NEWLINE { yy.startWhile(); };
 expSList: expSList sep expList | condition;
 sep: ANY;
 funcSig : IDENT "(" ")";
-funcSig : IDENT "(" expList ")";
+funcSig : IDENT "(" argList ")";
 
 ifs: IF condition ifStatementsStart statementList { yy.endIf() } ;
 ifStatementsStart: NEWLINE { yy.startIf() };
@@ -126,7 +122,7 @@ argList : arg | arg argCommaList;
 argCommaList : "," arg  
 | "," arg argCommaList;
 
-argListD : argD | argCommaListD;
+argListD : argD | argD argCommaListD;
 argCommaListD : "," argD
 | "," argD argCommaListD;
 argD:IDENT{yy.argDFound($1);};
@@ -177,6 +173,7 @@ term: STRING %{ $$={ type:'string',
              }
            //  yy.stringtermfound(yytext);
 %}
+|funcSig { yy.methodCall($1); }
 | HDRESS  %{ $$={ type:'hdress',
                val: yytext
                }

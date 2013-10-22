@@ -2,10 +2,9 @@ beeScript = require './beeScript'
 beeScript = beeScript.parser
 ex = """
        def f (x,y) 
-         return x*y
+         x+y
 
        a=f(1,2)
-       
        """
 Compiler = require('./compiler')
 class Error
@@ -26,7 +25,7 @@ class DiskotekStackMGenerator extends Compiler
   functions:{}
 
   execCode: []
-  currArgs:[]
+  currArgs:{}
   currArgsD:{}
   currArgC:0
   currIdent:''
@@ -44,6 +43,7 @@ class DiskotekStackMGenerator extends Compiler
   currCodeStack:[]
   currFuncName:''
   currFuncNStack:[]
+  callStack:[]
   argFound: (arg) =>
     @currArgC+=1
   methodDeff: (name) =>
@@ -81,11 +81,11 @@ class DiskotekStackMGenerator extends Compiler
     @functions[@currFuncName].args=@currArgsD
     @currCode.push(()->
       #return to prev control flow
-      oldP = @stack.pop()
+      oldP = @callStack.pop()
 
       @progP.c = oldP.c
       @progP.block = oldP.block
-
+      @currArgs = oldP.args
       console.log "poping ppointer", @progP
     )
     console.log 'method def ended '
@@ -117,14 +117,15 @@ class DiskotekStackMGenerator extends Compiler
         #increment ip
         #@progP.c++
         #leave where to return
-        console.log "pushing ppointer", @progP
+        console.log "pushing ppointer c= ", @progP.c
         oldP =
           c: @progP.c
           block: @progP.block
-        @stack.push(oldP)
-
+          args: @currArgs
+        @callStack.push(oldP)
         @progP.c=0
         @progP.block=f.code
+        @currArgs=f.args
       )
       console.log "pushed entry current code",@currCode
     else
@@ -284,8 +285,10 @@ class DiskotekStackMGenerator extends Compiler
       when "id"
         @currCode.push ((v)->
           return ()->
-            console.log 'pushing variable %s = %s', v,@variables[v].value
-            @stack.push @variables[v].value
+            console.log 'pushing variable %s in vars = %s', v,@variables[v]?.value?
+            console.log 'in args = ', @currArgs?[v]
+            console.log @currArgs
+            @stack.push  @currArgs?[v] ? @variables[v]?.value?
         )(term.val)
       when 'num'
 
@@ -509,15 +512,17 @@ class Runner
     @functions = generator.functions
     @progP.block = generator.execCode
     @diskotekLib = diskotekLib
+    @currArgs = {}
   stack:[]
   variables:[]
   execCode:[]
   functions:{}
   #this will be like ip
-
+  currArgs:{}
+  callStack:[]
   next: () =>
     console.log '---intsr---'
-    console.log @progP
+    console.log 'c = '+ @progP.c
     ni = @progP.block[@progP.c++]
 
     r = ni.bind(this)()
@@ -526,20 +531,19 @@ class Runner
       console.log 'exiting for reading memory'
       @diskotekLib.readmem(ni)
       return 2
-    console.log @progP
 
     console.log '---end intsr---'
     1 if @progP.block.length > @progP.c
   run: () =>
     console.log 'started to run'
     while (v=@next()) is 1
-      console.log @progP.block[@progP.c]
+      @progP.block[@progP.c]
 
   continue:()=>
     run()
 
 rn = new Runner beeScript.yy
-#rn.run()
+rn.run()
 
 module.exports = rn
 
