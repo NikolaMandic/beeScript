@@ -495,7 +495,6 @@ class DiskotekStackMachine
   @code:  []
   @stack: []
 
-beeScript.yy=new DiskotekStackMGenerator()
 beeScript.lexer.lex = ()->
   r = @next()
   if r
@@ -505,10 +504,6 @@ beeScript.lexer.lex = ()->
     return @lex()
 
 
-console.log(beeScript.parse(ex))
-beeScript.yy.end()
-beeScript.yy.dumpCode()
-beeScript.yy.dumpVars()
 class Runner
   constructor: (generator) ->
     console.log 'constructing runner'
@@ -549,11 +544,34 @@ class Runner
 
   continue:()=>
     run()
-
+###
+beeScript.yy=new DiskotekStackMGenerator()
 rn = new Runner beeScript.yy
-rn.run()
-
-module.exports = rn
+###
+###
+console.log(beeScript.parse(ex))
+beeScript.yy.end()
+beeScript.yy.dumpCode()
+beeScript.yy.dumpVars()
+###
+#rn.run()
+class Toolkit
+  constructor:(options)->
+    #{@parser,@generator,@runner,@text}=options
+    @parser=beeScript
+    @generator=new DiskotekStackMGenerator()
+    @parser.yy=@generator
+    @runner = new Runner beeScript.yy
+    @text = options?.text ? ''
+  generate:()=>
+    @parser.parse(ex)
+  run:()=>
+    @runner.run()
+  continue:()=>
+    @runner.continue()
+  next:()=>
+    @runner.next()
+module.exports = new Toolkit()
 
 #beeScript.yy.execCode[0]()
 
