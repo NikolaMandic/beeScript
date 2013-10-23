@@ -1,4 +1,4 @@
-init = ()->
+define [], ()->
   class Compiler
     methodDeff: (name) ->
       console.log('method def '+ name)
@@ -53,10 +53,4 @@ init = ()->
     endElse:()->
       console.log 'end else'
     this
-if module?
-  module.exports = init()
-else
-  if typeof require is 'function'
-    define 'compiler', init
-  else
-    init()
+  return Compiler

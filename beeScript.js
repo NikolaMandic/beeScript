@@ -71,6 +71,8 @@
     recoverable: (boolean: TRUE when the parser has a error recovery rule available for this particular error)
   }
 */
+
+define([],function() {
 var beeScript = (function(){
 var parser = {trace: function trace() { },
 yy: {},
@@ -736,7 +738,7 @@ Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
 })();
 
-
+return beeScript;
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 exports.parser = beeScript;
 exports.Parser = beeScript.Parser;
@@ -753,3 +755,4 @@ if (typeof module !== 'undefined' && require.main === module) {
   exports.main(process.argv.slice(1));
 }
 }
+});
