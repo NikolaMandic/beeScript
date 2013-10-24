@@ -3,7 +3,8 @@ beeScript
 ![](https://raw.github.com/NikolaMandic/beeScript/master/PeterM_Bee.png)
 =========
 
-trying to build a scripting language for diskotek
+trying to build a scripting language for diskotek    
+documentation in the making  http://nikolamandic.github.io/beeScript/
 
 
     a = (3+3)*4
