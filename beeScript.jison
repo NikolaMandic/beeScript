@@ -89,6 +89,7 @@ statement: expressionStatement
 | ms "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" ")" bs statementList { yy.methodEnd(); }
+| IDENT argList { yy.methodCall($1); }
 ;
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
