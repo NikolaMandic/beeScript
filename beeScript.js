@@ -330,7 +330,7 @@ parse: function parse(input) {
     return true;
 }};
 
-if (!module){
+if (typeof module !== "undefined" && module !== null) {
 define(function(){
 return beeScript
 });

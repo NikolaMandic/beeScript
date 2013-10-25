@@ -136,7 +136,7 @@ this is dev version
     return Compiler;
   };
 
-  if (module) {
+  if (typeof module !== "undefined" && module !== null) {
     module.exports = init();
   } else {
     define([], init);

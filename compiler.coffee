@@ -69,7 +69,7 @@ init= ()->
       console.log 'end else'
     this
   return Compiler
-if module
+if module?
   module.exports=init()
 else
   define [], init

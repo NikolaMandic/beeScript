@@ -216,7 +216,7 @@ term: STRING %{ $$={ type:'string',
             // yy.fatermfound($1);
 %};
 %%
-if (!module){
+if (typeof module !== "undefined" && module !== null) {
 define(function(){
 return beeScript
 });
