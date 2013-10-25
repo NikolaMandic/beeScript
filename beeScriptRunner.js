@@ -690,7 +690,7 @@ and object to wrap it all up
 
       Toolkit.prototype.generate = function() {
         this.parser.parse(this.text);
-        return this.parser.end();
+        return this.generator.end();
       };
 
       Toolkit.prototype.run = function() {

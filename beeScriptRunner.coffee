@@ -599,7 +599,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
        
     generate:()=>
       @parser.parse(@text)
-      @parser.end();
+      @generator.end()
     run:()=>
       @runner.run()
     continue:()=>
