@@ -7,11 +7,13 @@ and object to wrap it all up
 
 ###
 #if requirejs
-define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
 
-  #beeScript = require('./beeScript').parser
+ex = """
+eax = 0x0
+"""
+init = (beeScriptB,Compiler)->
 
-  #Compiler = require('./compiler')
+
   #init = ()->
   # get parser
   beeScript = beeScriptB
@@ -24,18 +26,50 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
       return r
     else
       return @lex()
-  ex = """
-         s asdasd
-         """
   class Error
     constructor:(@message)->
 
 
 
   diskotekLib =
-    memset: (address,val)->
+    registers:
+     'eax':
+       val:'',
+     'ecx':
+       val:'',
+     'edx':
+       val:'',
+     'ebx':
+       val:'',
+     'esp':
+       val:'',
+     'ebp':
+       val:'',
+     'esi':
+       val:'',
+     'edi':
+       val:'',
+     'eip':
+       val:'',
+     'eflags':
+       val:'',
+     'cs':
+       val:'',
+     'ss':
+       val:'',
+     'ds':
+       val:'',
+     'es':
+       val:'',
+     'fs':
+       val:'',
+     'gs':
+       val:''
+     memset: (address,val)->
       console.log 'setting %s to ', address,val
     readmem: (addr)->
+    regset: (reg,val)->
+      console.log 'setting %s to ', reg,val
     sendCMD: (cmd)->
       console.log "sending cmd: ", cmd
   ###
@@ -320,13 +354,16 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
 
       switch type
         when "id"
-          @currCode.push ((v)->
-            return ()->
-              console.log 'pushing variable %s in vars = %s', v,@variables[v]?.value?
-              console.log 'in args = ', @currArgs?[v]
-              console.log @currArgs
-              @stack.push  @currArgs?[v] ? @variables[v]?.value?
-          )(term.val)
+          if term.val of @diskotekLib.registers
+            #@currCode.push ()
+          else
+            @currCode.push ((v)->
+              return ()->
+                console.log 'pushing variable %s in vars = %s', v,@variables[v]?.value?
+                console.log 'in args = ', @currArgs?[v]
+                console.log @currArgs
+                @stack.push  @currArgs?[v] ? @variables[v]?.value?
+            )(term.val)
         when 'num'
 
           @currCode.push ((v)->
@@ -358,6 +395,19 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
             console.log val,valref.value
             @diskotekLib.memset(valref.value , val)
         )(@varAcc)
+
+        @currCode.push f
+      else if place of @diskotekLib.registers
+
+        console.log 'pushing reg val ', val,@varAcc
+        console.log @varAcc
+        f = ((valref) ->
+          console.log diskotekLib
+          ()->
+            val = @stack.pop()
+            console.log val,valref.value
+            @diskotekLib.regset(valref , val)
+        )(place)
 
         @currCode.push f
       else
@@ -398,6 +448,19 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
               # else
               valref.value=r
           )(@variables[place])
+          @currCode.push f
+        else if place of @diskotekLib.registers
+
+          console.log 'pushing reg val ', val,@varAcc
+          console.log @varAcc
+          f = ((valref) ->
+            console.log diskotekLib
+            ()->
+              val = @stack.pop()
+              console.log val,valref.value
+              @diskotekLib.regread(valref , val)
+          )(place)
+
           @currCode.push f
 
         else
@@ -596,7 +659,6 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
       @parser.yy=@generator
       @runner = new Runner beeScript.yy
       @text = options?.text ? ''
-       
     generate:()=>
       @parser.parse(@text)
       @generator.end()
@@ -617,4 +679,13 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
   ###
   return t
   #beeScript.yy.execCode[0]()
+if module?
+  beeScript = require('./beeScript').parser
 
+  Compiler = require('./compiler')
+  t=init(beeScript,Compiler)
+  t.text=ex
+  t.generate()
+  t.run()
+else if requirejs?
+  define ['./beeScript','./compiler'],init

@@ -8,12 +8,15 @@ and object to wrap it all up
 
 
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var Compiler, beeScript, ex, init, t,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['./beeScript', './compiler'], function(beeScriptB, Compiler) {
-    var DiskotekStackMGenerator, DiskotekStackMachine, Error, Runner, Toolkit, beeScript, diskotekLib, ex, t, _ref;
+  ex = "eax = 0x0";
+
+  init = function(beeScriptB, Compiler) {
+    var DiskotekStackMGenerator, DiskotekStackMachine, Error, Runner, Toolkit, beeScript, diskotekLib, t, _ref;
     beeScript = beeScriptB;
     beeScript.lexer.lex = function() {
       var r;
@@ -25,7 +28,6 @@ and object to wrap it all up
         return this.lex();
       }
     };
-    ex = "s asdasd";
     Error = (function() {
       function Error(message) {
         this.message = message;
@@ -35,10 +37,63 @@ and object to wrap it all up
 
     })();
     diskotekLib = {
-      memset: function(address, val) {
-        return console.log('setting %s to ', address, val);
+      registers: {
+        'eax': {
+          val: ''
+        },
+        'ecx': {
+          val: ''
+        },
+        'edx': {
+          val: ''
+        },
+        'ebx': {
+          val: ''
+        },
+        'esp': {
+          val: ''
+        },
+        'ebp': {
+          val: ''
+        },
+        'esi': {
+          val: ''
+        },
+        'edi': {
+          val: ''
+        },
+        'eip': {
+          val: ''
+        },
+        'eflags': {
+          val: ''
+        },
+        'cs': {
+          val: ''
+        },
+        'ss': {
+          val: ''
+        },
+        'ds': {
+          val: ''
+        },
+        'es': {
+          val: ''
+        },
+        'fs': {
+          val: ''
+        },
+        'gs': {
+          val: ''
+        },
+        memset: function(address, val) {
+          return console.log('setting %s to ', address, val);
+        }
       },
       readmem: function(addr) {},
+      regset: function(reg, val) {
+        return console.log('setting %s to ', reg, val);
+      },
       sendCMD: function(cmd) {
         return console.log("sending cmd: ", cmd);
       }
@@ -368,15 +423,19 @@ and object to wrap it all up
         type = term.type;
         switch (type) {
           case "id":
-            this.currCode.push((function(v) {
-              return function() {
-                var _ref1, _ref2, _ref3, _ref4, _ref5;
-                console.log('pushing variable %s in vars = %s', v, ((_ref1 = this.variables[v]) != null ? _ref1.value : void 0) != null);
-                console.log('in args = ', (_ref2 = this.currArgs) != null ? _ref2[v] : void 0);
-                console.log(this.currArgs);
-                return this.stack.push((_ref3 = (_ref4 = this.currArgs) != null ? _ref4[v] : void 0) != null ? _ref3 : ((_ref5 = this.variables[v]) != null ? _ref5.value : void 0) != null);
-              };
-            })(term.val));
+            if (term.val in this.diskotekLib.registers) {
+
+            } else {
+              this.currCode.push((function(v) {
+                return function() {
+                  var _ref1, _ref2, _ref3, _ref4, _ref5;
+                  console.log('pushing variable %s in vars = %s', v, ((_ref1 = this.variables[v]) != null ? _ref1.value : void 0) != null);
+                  console.log('in args = ', (_ref2 = this.currArgs) != null ? _ref2[v] : void 0);
+                  console.log(this.currArgs);
+                  return this.stack.push((_ref3 = (_ref4 = this.currArgs) != null ? _ref4[v] : void 0) != null ? _ref3 : ((_ref5 = this.variables[v]) != null ? _ref5.value : void 0) != null);
+                };
+              })(term.val));
+            }
             break;
           case 'num':
             this.currCode.push((function(v) {
@@ -415,6 +474,18 @@ and object to wrap it all up
             };
           })(this.varAcc);
           this.currCode.push(f);
+        } else if (place in this.diskotekLib.registers) {
+          console.log('pushing reg val ', val, this.varAcc);
+          console.log(this.varAcc);
+          f = (function(valref) {
+            console.log(diskotekLib);
+            return function() {
+              val = this.stack.pop();
+              console.log(val, valref.value);
+              return this.diskotekLib.regset(valref, val);
+            };
+          })(place);
+          this.currCode.push(f);
         } else {
           if (place in this.variables) {
             console.log('curr ident of var');
@@ -450,6 +521,18 @@ and object to wrap it all up
                 return valref.value = r;
               };
             })(this.variables[place]);
+            this.currCode.push(f);
+          } else if (place in this.diskotekLib.registers) {
+            console.log('pushing reg val ', val, this.varAcc);
+            console.log(this.varAcc);
+            f = (function(valref) {
+              console.log(diskotekLib);
+              return function() {
+                val = this.stack.pop();
+                console.log(val, valref.value);
+                return this.diskotekLib.regread(valref, val);
+              };
+            })(place);
             this.currCode.push(f);
           } else {
             /*
@@ -719,6 +802,17 @@ and object to wrap it all up
     */
 
     return t;
-  });
+  };
+
+  if (typeof module !== "undefined" && module !== null) {
+    beeScript = require('./beeScript').parser;
+    Compiler = require('./compiler');
+    t = init(beeScript, Compiler);
+    t.text = ex;
+    t.generate();
+    t.run();
+  } else if (typeof requirejs !== "undefined" && requirejs !== null) {
+    define(['./beeScript', './compiler'], init);
+  }
 
 }).call(this);
