@@ -38,7 +38,10 @@ and object to wrap it all up
       memset: function(address, val) {
         return console.log('setting %s to ', address, val);
       },
-      readmem: function(addr) {}
+      readmem: function(addr) {},
+      sendCMD: function(cmd) {
+        return console.log("sending cmd: ", cmd);
+      }
     };
     /*
     this is stack machine vm input generator
@@ -555,6 +558,14 @@ and object to wrap it all up
         [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref1 = this.currCode)), _ref1;
         this.currCode = this.oldCode;
         return console.log('end else', this.blockStack);
+      };
+
+      DiskotekStackMGenerator.prototype.sendCMD = function(cmd) {
+        return this.currCode.push((function(v) {
+          return function() {
+            return this.diskotekLib.sendCMD(v);
+          };
+        })(cmd));
       };
 
       DiskotekStackMGenerator.prototype.end = function() {};

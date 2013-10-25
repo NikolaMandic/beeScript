@@ -517,14 +517,14 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
       @currCode=@oldCode
 
       console.log 'end else', @blockStack
-    sendCMD:(cmd)
+    sendCMD:(cmd)->
       @currCode.push ((v)->
         ()->
           @diskotekLib.sendCMD v
         )(cmd)
     end:->
      # @execCode[-1..0]=@currCode
-    dumpCode: ->
+    dumpCode:->
       console.log '---------code-----------'
       console.dir @execCode
       console.log '--------------------'
