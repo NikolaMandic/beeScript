@@ -217,6 +217,6 @@ term: STRING %{ $$={ type:'string',
 %};
 %%
 
-define("beeScript",function(require,exprots,modules){
+define(function(){
 return beeScript
 });
