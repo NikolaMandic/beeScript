@@ -140,7 +140,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
         #code goes to global stack
         console.log 'returned to global stack'
         @insideMethodDeff = false
-        @currCode = @execCode
+        @currCode =[] #@execCode
         @currFuncName = ''
 
 
@@ -521,6 +521,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
         )(cmd)
     end:->
       @execCode[-1..0]=@currCode
+      
     dumpCode:->
       console.log '---------code-----------'
       console.dir @execCode
@@ -598,6 +599,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
        
     generate:()=>
       @parser.parse(@text)
+      @parser.end();
     run:()=>
       @runner.run()
     continue:()=>

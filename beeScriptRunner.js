@@ -184,7 +184,7 @@ and object to wrap it all up
         } else {
           console.log('returned to global stack');
           this.insideMethodDeff = false;
-          this.currCode = this.execCode;
+          this.currCode = [];
           return this.currFuncName = '';
         }
       };
@@ -689,7 +689,8 @@ and object to wrap it all up
       }
 
       Toolkit.prototype.generate = function() {
-        return this.parser.parse(this.text);
+        this.parser.parse(this.text);
+        return this.parser.end();
       };
 
       Toolkit.prototype.run = function() {
