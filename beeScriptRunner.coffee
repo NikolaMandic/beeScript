@@ -1,19 +1,20 @@
-###
-this module contains the    
-stack machine vm    
-code generator for it    
-and object to wrap it all up
+  ###
+  this module contains the    
+  stack machine vm    
+  code generator for it    
+  and object to wrap it all up
 
 
-###
+  ###
+  #if requirejs
 define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
 
-  #  beeScript = require './beeScript'
+  #beeScript = require('./beeScript').parser
 
   #Compiler = require('./compiler')
   #init = ()->
   # get parser
-  beeScript = beeScriptB
+  #beeScript = beeScriptB
 
   # make so that tokens are printed when lexer works
   beeScript.lexer.lex = ()->
@@ -24,11 +25,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
     else
       return @lex()
   ex = """
-         def f (x,y)
-           x+y
-
-         a=f(1,2)
-         memory.a=5
+         s asdasd
          """
   class Error
     constructor:(@message)->
@@ -523,7 +520,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
           @diskotekLib.sendCMD v
         )(cmd)
     end:->
-     # @execCode[-1..0]=@currCode
+      @execCode[-1..0]=@currCode
     dumpCode:->
       console.log '---------code-----------'
       console.dir @execCode
@@ -608,6 +605,14 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
     next:()=>
       @runner.next()
   t= new Toolkit()
+  ###
+  t.text=ex
+  t.generate()
+
+  t.parser.yy.end()
+  t.parser.yy.dumpCode()
+  t.run()
+  ###
   return t
 #beeScript.yy.execCode[0]()
 

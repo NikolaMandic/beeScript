@@ -12,7 +12,7 @@ there may be some missing from here that are in the parser
 and some from here may never get called    
 this is dev version
 ###
-define [], ()->
+init= ()->
   class Compiler
     methodDeff: (name) ->
       console.log('method def '+ name)
@@ -69,3 +69,7 @@ define [], ()->
       console.log 'end else'
     this
   return Compiler
+if module
+  module.exports=init()
+else
+  define [], init

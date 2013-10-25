@@ -105,7 +105,7 @@ statement: expressionStatement
 | ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" ")" bs statementList { yy.methodEnd(); }
 | IDENT argList { yy.methodCall($1); }
-| s CMD {yy.sendCMD($2)}
+| S CMD {yy.sendCMD($2)}
 ;
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
@@ -216,7 +216,8 @@ term: STRING %{ $$={ type:'string',
             // yy.fatermfound($1);
 %};
 %%
-
+if (!module){
 define(function(){
 return beeScript
 });
+}

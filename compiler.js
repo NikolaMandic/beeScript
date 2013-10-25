@@ -16,7 +16,9 @@ this is dev version
 
 
 (function() {
-  define([], function() {
+  var init;
+
+  init = function() {
     var Compiler;
     Compiler = (function() {
       function Compiler() {}
@@ -132,6 +134,12 @@ this is dev version
 
     })();
     return Compiler;
-  });
+  };
+
+  if (module) {
+    module.exports = init();
+  } else {
+    define([], init);
+  }
 
 }).call(this);
