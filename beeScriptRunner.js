@@ -7,7 +7,3 @@ and object to wrap it all up
 */
 
 
-(function() {
-
-
-}).call(this);
