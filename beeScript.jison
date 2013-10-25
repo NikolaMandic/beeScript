@@ -2,6 +2,8 @@
  * copyright (c) Nikola Mandic 2013
  * */
 
+
+
 /* lexical grammar */
 %lex 
 %s smode
@@ -213,3 +215,8 @@ term: STRING %{ $$={ type:'string',
 
             // yy.fatermfound($1);
 %};
+%%
+
+define("beeScript",function(require,exprots,modules){
+return beeScript
+});
