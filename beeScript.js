@@ -655,78 +655,91 @@ performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0:/* skip whitespace */
+case 0:return "CMD";  
 break;
-case 1:return 68
+case 1:
+this.begin('INITIAL');
+
 break;
-case 2:return 6
+case 2:/* skip whitespace */
 break;
-case 3:return 6
+case 3:return 68
 break;
 case 4:return 6
 break;
-case 5:return 36
+case 5:return 6
 break;
-case 6:return 8
+case 6:return 6
 break;
-case 7:return 49
+case 7:return 36
 break;
-case 8:return 48
+case 8:return "REGS"
 break;
-case 9:return 53
+case 9:
+  this.begin('smode');
+  return "S";
+
 break;
-case 10:return 46
+case 10:return 8
 break;
-case 11:return 47
+case 11:return 49
 break;
-case 12:return 56
+case 12:return 48
 break;
-case 13:return 65
+case 13:return 53
 break;
-case 14:return 64
+case 14:return 46
 break;
-case 15:return 63
+case 15:return 47
 break;
-case 16:return 62
+case 16:return 56
 break;
-case 17:return 53
+case 17:return 65
 break;
-case 18:return 51
+case 18:return 64
 break;
-case 19:return 50
+case 19:return 63
 break;
-case 20:return '^'
+case 20:return 62
 break;
-case 21:return 20
+case 21:return 53
 break;
-case 22:return 40
+case 22:return 51
 break;
-case 23:return 42
+case 23:return 50
 break;
-case 24:return 21
+case 24:return '^'
 break;
-case 25:return 'PI'
+case 25:return 20
 break;
-case 26:return 'E'
+case 26:return 40
 break;
-case 27:return "HDRESS"
+case 27:return 42
 break;
-case 28:
+case 28:return 21
+break;
+case 29:return 'PI'
+break;
+case 30:return 'E'
+break;
+case 31:return "HDRESS"
+break;
+case 32:
  return 26
 
 break;
-case 29:return 66
+case 33:return 66
 break;
-case 30:return "IDENT"
+case 34:return "IDENT"
 break;
-case 31:return 5
+case 35:return 5
 break;
-case 32:return 30
+case 36:return 30
 break;
 }
 },
-rules: [/^(?:[ ]+)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:\n)/,/^(?:\r)/,/^(?:\rc\b)/,/^(?:while\b)/,/^(?:\.)/,/^(?:\|\|)/,/^(?:&&)/,/^(?:,)/,/^(?:==)/,/^(?:!=)/,/^(?:=)/,/^(?:\*)/,/^(?:\/)/,/^(?:-)/,/^(?:\+)/,/^(?:,)/,/^(?:>)/,/^(?:<)/,/^(?:\^)/,/^(?:\()/,/^(?:if\b)/,/^(?:else\b)/,/^(?:\))/,/^(?:PI\b)/,/^(?:E\b)/,/^(?:0x\w+)/,/^(?:def\b)/,/^(?:'[^"]+')/,/^(?:\w+)/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],"inclusive":true}}
+rules: [/^(?:.+)/,/^(?:\n)/,/^(?:[ ]+)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:\n)/,/^(?:\r)/,/^(?:\rc\b)/,/^(?:while\b)/,/^(?:registers\b)/,/^(?:s\b)/,/^(?:\.)/,/^(?:\|\|)/,/^(?:&&)/,/^(?:,)/,/^(?:==)/,/^(?:!=)/,/^(?:=)/,/^(?:\*)/,/^(?:\/)/,/^(?:-)/,/^(?:\+)/,/^(?:,)/,/^(?:>)/,/^(?:<)/,/^(?:\^)/,/^(?:\()/,/^(?:if\b)/,/^(?:else\b)/,/^(?:\))/,/^(?:PI\b)/,/^(?:E\b)/,/^(?:0x\w+)/,/^(?:def\b)/,/^(?:'[^"]+')/,/^(?:\w+)/,/^(?:$)/,/^(?:.)/],
+conditions: {"smode":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36],"inclusive":true},"INITIAL":{"rules":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36],"inclusive":true}}
 };
 return lexer;
 })();

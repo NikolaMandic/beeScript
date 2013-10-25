@@ -3,8 +3,16 @@
  * */
 
 /* lexical grammar */
-%lex blockIdent block
+%lex 
+%s smode
 %%
+
+
+<smode>.+ return "CMD";  
+
+<smode>\n %{
+this.begin('INITIAL');
+%}
 
 [ ]+ /* skip whitespace */
 [0-9]+("."[0-9]+)?\b return 'NUMBER'
@@ -12,6 +20,11 @@
 \r return 'NEWLINE'
 \r\c return 'NEWLINE'
 "while" return 'WHILE'
+"registers" return "REGS"
+"s" %{
+  this.begin('smode');
+  return "S";
+%}
 "." return 'DOT'
 "||" return '||'
 "&&" return '&&'
@@ -90,6 +103,7 @@ statement: expressionStatement
 | ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" ")" bs statementList { yy.methodEnd(); }
 | IDENT argList { yy.methodCall($1); }
+| s CMD {yy.sendCMD($2)}
 ;
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;

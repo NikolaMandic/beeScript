@@ -39,7 +39,8 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
     memset: (address,val)->
       console.log 'setting %s to ', address,val
     readmem: (addr)->
-
+    sendCMD: (cmd)->
+      console.log "sending cmd: ", cmd
   ###
   this is stack machine vm input generator
   it extends compiler and overwrites production actions of a parser
@@ -516,7 +517,11 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
       @currCode=@oldCode
 
       console.log 'end else', @blockStack
-
+    sendCMD:(cmd)
+      @currCode.push ((v)->
+        ()->
+          @diskotekLib.sendCMD v
+        )(cmd)
     end:->
      # @execCode[-1..0]=@currCode
     dumpCode: ->
