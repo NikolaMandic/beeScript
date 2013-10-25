@@ -1,12 +1,12 @@
-  ###
-  this module contains the    
-  stack machine vm    
-  code generator for it    
-  and object to wrap it all up
+###
+this module contains the    
+stack machine vm    
+code generator for it    
+and object to wrap it all up
 
 
-  ###
-  #if requirejs
+###
+#if requirejs
 define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
 
   #beeScript = require('./beeScript').parser
@@ -14,7 +14,7 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
   #Compiler = require('./compiler')
   #init = ()->
   # get parser
-  #beeScript = beeScriptB
+  beeScript = beeScriptB
 
   # make so that tokens are printed when lexer works
   beeScript.lexer.lex = ()->
@@ -614,5 +614,5 @@ define ['./beeScript','./compiler'],(beeScriptB,Compiler)->
   t.run()
   ###
   return t
-#beeScript.yy.execCode[0]()
+  #beeScript.yy.execCode[0]()
 
