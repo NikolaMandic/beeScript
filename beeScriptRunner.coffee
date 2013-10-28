@@ -1,7 +1,7 @@
 ###
-this module contains the    
-stack machine vm    
-code generator for it    
+this module contains the
+stack machine vm
+code generator for it
 and object to wrap it all up
 
 
@@ -9,8 +9,7 @@ and object to wrap it all up
 #if requirejs
 
 ex = """
-place = 0
-a = eax
+s asd
 """
 init = (beeScriptB,Compiler)->
 
@@ -66,31 +65,41 @@ init = (beeScriptB,Compiler)->
        val:'',
      'gs':
        val:''
-     memset: (address,val)->
+    memset: (address,val)->
       console.log 'setting %s to ', address,val
     readmem: (addr)->
+      f = (val)=>
+        val = _.where @state.getMemory(addr),{'address':addr}
+        @vm.resume
+      val = @state.getMemory(addr)
+      if val?.then?
+        val.then f
+      else
+        @vm.stack.push(val)
       {'stop':''}
     regset: (reg,val)->
       console.log 'setting %s to ', reg,val
     regread: (reg)->
-      console.log 'regRead ',reg
+      console.log 'regRead ',reg,@state.debugData.registers[reg]
+      
       {'stop':''}
     sendCMD: (cmd)->
+      @command(cmd[1..])
       console.log "sending cmd: ", cmd
   ###
   this is stack machine vm input generator
   it extends compiler and overwrites production actions of a parser
-  there is expression stack for a+x     
-      `@stack`    
-  there is call stack for method invocations    
-      `@callStack`    
-  there is "pc/ip" that contains current block of code and "c" that is ip/pc for that block of code      
-      `@progP`    
-  there is place for variables. Here are variables stored and kept troughout execution     
-      `@variables`    
-  every runtime code that is generated is put in     
-      `@currCode`    
-  main control flow of a program is at execCode so currCode can be appended to execCode and cleaned    
+  there is expression stack for a+x
+      `@stack`
+  there is call stack for method invocations
+      `@callStack`
+  there is "pc/ip" that contains current block of code and "c" that is ip/pc for that block of code
+      `@progP`
+  there is place for variables. Here are variables stored and kept troughout execution
+      `@variables`
+  every runtime code that is generated is put in
+      `@currCode`
+  main control flow of a program is at execCode so currCode can be appended to execCode and cleaned
       `@execCode`
   ###
   class DiskotekStackMGenerator extends Compiler
@@ -359,7 +368,7 @@ init = (beeScriptB,Compiler)->
 
       switch type
         when "id"
-          if term.val of @diskotekLib.registers
+          if term.val of @diskotekLib.registers or term.val ==='memory'
             #@currCode.push ()
           else
             @currCode.push ((v)->
@@ -455,7 +464,7 @@ init = (beeScriptB,Compiler)->
           )(@variables[place])
           @currCode.push f
         else if val.val of @diskotekLib.registers
-          
+
           console.log 'rhs reg pushing reg val ', val,@varAcc
           console.log @varAcc
           f = ((valref) ->
@@ -589,7 +598,7 @@ init = (beeScriptB,Compiler)->
         )(cmd)
     end:->
       @execCode[-1..0]=@currCode
-      
+
     dumpCode:->
       console.log '---------code-----------'
       console.dir @execCode
@@ -615,6 +624,7 @@ init = (beeScriptB,Compiler)->
       @functions = generator.functions
       @progP.block = generator.execCode
       @diskotekLib = diskotekLib
+      @diskotekLib.vm=this
       @currArgs = {}
     stack:[]
     variables:[]
@@ -623,6 +633,8 @@ init = (beeScriptB,Compiler)->
     #this will be like ip
     currArgs:{}
     callStack:[]
+    resume:()->
+      
     next: () =>
       console.log '---intsr---'
       console.log 'c = '+ @progP.c
@@ -673,7 +685,7 @@ init = (beeScriptB,Compiler)->
     next:()=>
       @runner.next()
     command:()->
-
+      console.log 'command exec'
   t= new Toolkit()
   ###
   t.text=ex
