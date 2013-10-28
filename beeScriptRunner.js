@@ -13,7 +13,7 @@ and object to wrap it all up
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  ex = "eax = 0x0";
+  ex = "place = 0\na = eax";
 
   init = function(beeScriptB, Compiler) {
     var DiskotekStackMGenerator, DiskotekStackMachine, Error, Runner, Toolkit, beeScript, diskotekLib, t, _ref;
@@ -90,9 +90,19 @@ and object to wrap it all up
           return console.log('setting %s to ', address, val);
         }
       },
-      readmem: function(addr) {},
+      readmem: function(addr) {
+        return {
+          'stop': ''
+        };
+      },
       regset: function(reg, val) {
         return console.log('setting %s to ', reg, val);
+      },
+      regread: function(reg) {
+        console.log('regRead ', reg);
+        return {
+          'stop': ''
+        };
       },
       sendCMD: function(cmd) {
         return console.log("sending cmd: ", cmd);
@@ -274,7 +284,7 @@ and object to wrap it all up
           console.log('trying to search in lib');
           f = (_ref2 = diskotekLib != null ? diskotekLib[name] : void 0) != null ? _ref2 : null;
           if (f) {
-            cf = f.bind(this, this.currArgs);
+            cf = f.bind(this, this.stack);
             this.currCode.push(cf);
             /*
             @currCode.push((name)->
@@ -461,7 +471,7 @@ and object to wrap it all up
       DiskotekStackMGenerator.prototype.assignment = function(place, val) {
         var f;
         console.log('-------assign---------');
-        console.log('assignment of %s to %s', val, this.currIdent);
+        console.log('assignment of ', val, ' to ', place);
         if (place === 'memory') {
           console.log('pushing memset val ', val, this.varAcc);
           console.log(this.varAcc);
@@ -487,6 +497,7 @@ and object to wrap it all up
           })(place);
           this.currCode.push(f);
         } else {
+          console.log("rhs------", val);
           if (place in this.variables) {
             console.log('curr ident of var');
           } else {
@@ -498,16 +509,13 @@ and object to wrap it all up
               value: 0
             };
           }
-          if (val === 'memory') {
+          if (val.val === 'memory') {
             console.log('rhs is memory', this.varAcc);
             console.log("read memory instruction", val, this.varAcc);
             f = (function(valref) {
               console.log('setting to %s', val);
               return function() {
-                var cd;
-                return cd = {
-                  memaddres: valref.value
-                };
+                return this.diskotekLib.readmem(valref.value);
               };
             })(this.variables[this.varAcc.name]);
             this.currCode.push(f);
@@ -522,8 +530,8 @@ and object to wrap it all up
               };
             })(this.variables[place]);
             this.currCode.push(f);
-          } else if (place in this.diskotekLib.registers) {
-            console.log('pushing reg val ', val, this.varAcc);
+          } else if (val.val in this.diskotekLib.registers) {
+            console.log('rhs reg pushing reg val ', val, this.varAcc);
             console.log(this.varAcc);
             f = (function(valref) {
               console.log(diskotekLib);
@@ -532,7 +540,7 @@ and object to wrap it all up
                 console.log(val, valref.value);
                 return this.diskotekLib.regread(valref, val);
               };
-            })(place);
+            })(val);
             this.currCode.push(f);
           } else {
             /*
@@ -717,9 +725,8 @@ and object to wrap it all up
         r = ni.bind(this)();
         console.log('result of a f call', r);
         console.log('stack dump after instr', this.stack);
-        if ((r != null ? r.memaddres : void 0) != null) {
-          console.log('exiting for reading memory');
-          this.diskotekLib.readmem(ni);
+        if (((r != null ? r.memaddres : void 0) != null) || ((r != null ? r.stop : void 0) != null)) {
+          console.log('exiting for reading ');
           return 2;
         }
         console.log('---end intsr---');
@@ -787,6 +794,8 @@ and object to wrap it all up
       Toolkit.prototype.next = function() {
         return this.runner.next();
       };
+
+      Toolkit.prototype.command = function() {};
 
       return Toolkit;
 

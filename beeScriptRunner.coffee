@@ -9,7 +9,8 @@ and object to wrap it all up
 #if requirejs
 
 ex = """
-eax = 0x0
+place = 0
+a = eax
 """
 init = (beeScriptB,Compiler)->
 
@@ -68,8 +69,12 @@ init = (beeScriptB,Compiler)->
      memset: (address,val)->
       console.log 'setting %s to ', address,val
     readmem: (addr)->
+      {'stop':''}
     regset: (reg,val)->
       console.log 'setting %s to ', reg,val
+    regread: (reg)->
+      console.log 'regRead ',reg
+      {'stop':''}
     sendCMD: (cmd)->
       console.log "sending cmd: ", cmd
   ###
@@ -204,7 +209,7 @@ init = (beeScriptB,Compiler)->
         f = diskotekLib?[name] ?  null
         # throw new Error("no function with the name of"+name)
         if f
-          cf=f.bind(this,@currArgs)
+          cf=f.bind(this,@stack)
           @currCode.push(cf)
           ###
           @currCode.push((name)->
@@ -384,7 +389,7 @@ init = (beeScriptB,Compiler)->
 
       console.log '-------assign---------'
 
-      console.log 'assignment of %s to %s', val ,@currIdent
+      console.log 'assignment of ', val,' to ' ,place
       if place is 'memory'
         console.log 'pushing memset val ', val,@varAcc
         console.log @varAcc
@@ -411,6 +416,7 @@ init = (beeScriptB,Compiler)->
 
         @currCode.push f
       else
+        console.log "rhs------", val
         #this after this place will be in variables
         if place of @variables
           console.log 'curr ident of var'
@@ -422,7 +428,7 @@ init = (beeScriptB,Compiler)->
             name:place
             value:0
 
-        if val is 'memory'
+        if val.val is 'memory'
           console.log 'rhs is memory',@varAcc
 
           #insert instruction for reading memory
@@ -431,8 +437,7 @@ init = (beeScriptB,Compiler)->
 
             console.log 'setting to %s',  val
             return ()->
-              cd=
-                memaddres:valref.value
+              @diskotekLib.readmem(valref.value)
           )(@variables[@varAcc.name])
           @currCode.push f
           #store read result in lhs
@@ -449,9 +454,9 @@ init = (beeScriptB,Compiler)->
               valref.value=r
           )(@variables[place])
           @currCode.push f
-        else if place of @diskotekLib.registers
-
-          console.log 'pushing reg val ', val,@varAcc
+        else if val.val of @diskotekLib.registers
+          
+          console.log 'rhs reg pushing reg val ', val,@varAcc
           console.log @varAcc
           f = ((valref) ->
             console.log diskotekLib
@@ -459,7 +464,7 @@ init = (beeScriptB,Compiler)->
               val = @stack.pop()
               console.log val,valref.value
               @diskotekLib.regread(valref , val)
-          )(place)
+          )(val)
 
           @currCode.push f
 
@@ -626,9 +631,8 @@ init = (beeScriptB,Compiler)->
       r = ni.bind(this)()
       console.log 'result of a f call',r
       console.log 'stack dump after instr', @stack
-      if r?.memaddres?
-        console.log 'exiting for reading memory'
-        @diskotekLib.readmem(ni)
+      if r?.memaddres? or r?.stop?
+        console.log 'exiting for reading '
         return 2
 
       console.log '---end intsr---'
@@ -668,6 +672,8 @@ init = (beeScriptB,Compiler)->
       @runner.continue()
     next:()=>
       @runner.next()
+    command:()->
+
   t= new Toolkit()
   ###
   t.text=ex
