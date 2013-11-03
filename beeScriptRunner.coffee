@@ -9,7 +9,8 @@ and object to wrap it all up
 #if requirejs
 
 ex = """
-s asd
+a='adfsdf'
+s asd #a adas
 """
 init = (beeScriptB,Compiler)->
 
@@ -81,11 +82,12 @@ init = (beeScriptB,Compiler)->
       console.log 'setting %s to ', reg,val
     regread: (reg)->
       console.log 'regRead ',reg,@state.debugData.registers[reg]
-      
+
       {'stop':''}
     sendCMD: (cmd)->
+
+      console.log "sending cmd: ", cmd.join('')
       @command(cmd[1..])
-      console.log "sending cmd: ", cmd
   ###
   this is stack machine vm input generator
   it extends compiler and overwrites production actions of a parser
@@ -234,7 +236,6 @@ init = (beeScriptB,Compiler)->
 
     identFound : (name) =>
       @currIdent = name
-
     accessor: (name) =>
       if @currIdent is 'memory'
         console.log 'accessor mem %s', name
@@ -368,7 +369,7 @@ init = (beeScriptB,Compiler)->
 
       switch type
         when "id"
-          if term.val of @diskotekLib.registers or term.val ==='memory'
+          if term.val of @diskotekLib.registers or term.val =='memory'
             #@currCode.push ()
           else
             @currCode.push ((v)->
@@ -591,11 +592,33 @@ init = (beeScriptB,Compiler)->
       @currCode=@oldCode
 
       console.log 'end else', @blockStack
+
+    cmdToSend:''
+    cmdArr:[]
+    addIDENTI: (name)=>
+      console.log 'push identi ', name
+      #v= @cmdArr.pop().v
+      
+      #@cmdArr.push type:v:v[0..-2]
+      @cmdArr.push(type:'id',v:name[1..-2])
+    addCMD: (name)=>
+      if name[name.length-1]==' '
+        console.log 'dsfdsf :', name[0..-1]
+        name=name[0..-2]
+      console.log 'push cmd ', name
+      @cmdArr.push(type:'str',v:name)
     sendCMD:(cmd)->
-      @currCode.push ((v)->
+      console.log 'sendCMD ', cmd, @cmdArr
+      @currCode.push ((v,cmdArr)->
         ()->
-          @diskotekLib.sendCMD v
-        )(cmd)
+          $this=this
+          cmdArrE = cmdArr.map (v,i,l)->
+            if v.type =='id'
+              $this.variables[v.v].value
+            else
+              v.v
+          @diskotekLib.sendCMD cmdArrE
+        )(cmd,@cmdArr.slice())
     end:->
       @execCode[-1..0]=@currCode
 
@@ -634,7 +657,7 @@ init = (beeScriptB,Compiler)->
     currArgs:{}
     callStack:[]
     resume:()->
-      
+
     next: () =>
       console.log '---intsr---'
       console.log 'c = '+ @progP.c
