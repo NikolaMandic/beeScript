@@ -10,7 +10,8 @@
 %%
 
 
-<smode>.+ return "CMD";  
+<smode>\#\w+[ ]+ return "IDENTI";
+<smode>[^#]+ return "CMD";  
 
 <smode>\n %{
 this.begin('INITIAL');
@@ -105,8 +106,13 @@ statement: expressionStatement
 | ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
 | ms fa "(" ")" bs statementList { yy.methodEnd(); }
 | IDENT argList { yy.methodCall($1); }
-| S CMD {yy.sendCMD($2)}
+| S cmdL {yy.sendCMD($2)}
 ;
+cmdL: IDENTI {$$=yy.addIDENTI($1)}
+|
+CMD {$$=yy.addCMD($1)}
+|cmdL IDENTI {$$=yy.addIDENTI($2)}
+| cmdL CMD {$$=yy.addCMD($2)};
 ms: DEF IDENT { yy.methodDeff($2);};
 fA : DOT IDENT fA | DOT IDENT;
 bs: NEWLINE;
