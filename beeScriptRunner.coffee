@@ -9,8 +9,8 @@ and object to wrap it all up
 #if requirejs
 
 ex = """
-a='adfsdf'
-s asd #a adas
+a='fsd'
+w..b
 """
 init = (beeScriptB,Compiler)->
 
@@ -236,6 +236,53 @@ init = (beeScriptB,Compiler)->
 
     identFound : (name) =>
       @currIdent = name
+
+    varAccArr:[]
+    fieldAccess: (name,type)=>
+      console.log 'fieldAccess', @varAccArr
+      @ensureVariableDeclaration(name,'obj')
+
+      @currCode.push(
+        ((v)->
+          ()->
+            @stack.push v.value
+        )(@variables[name])
+      )
+      for v in @varAccArr
+        if v.type is 'litteral'
+          @currCode.push(
+            ((v)->
+              ()->
+                obj = @stack.pop()
+                console.log 'accessing objD', obj, ' ', v
+                aV=obj[v]
+                @stack.push obj[v]={}
+
+            )(v.name)
+          )
+        else
+          @currCode.push(
+            ((v)->
+              ()->
+                obj = @stack.pop()
+                console.log 'accessing obj', obj, ' ', v
+                @stack.push obj[v]={}
+            )(v.name)
+          )
+    accessorD: (name) =>
+      console.log 'accessorD ',name
+      if @currIdent is 'memory'
+        console.log 'accessor mem %s', name
+        #@varAcc = @variables?.name
+        console.log @variables
+        @variables['$']=name
+        @varAcc = @variables['$']
+        console.log @varAcc,' is on'
+      else
+        @varAccArr.push(
+          name:name
+          type:'litteral'
+        )
     accessor: (name) =>
       if @currIdent is 'memory'
         console.log 'accessor mem %s', name
@@ -246,13 +293,14 @@ init = (beeScriptB,Compiler)->
           console.log @varAcc,' is on'
         else
           throw new Error('accessing memory with undefined variable')
-          ###
-          @variables.name=
-            name:name
-            value:0
-          console.log 'is off', @varAcc
-          ###
+      else
 
+        ###
+        @varAccArr.push(
+          v:name
+          type:'ident'
+        )
+        ###
 
       console.log name
     condition:(term)=>
@@ -386,7 +434,11 @@ init = (beeScriptB,Compiler)->
               console.log 'pushing term ',v
               @stack.push parseInt(v,10)
           )(term.val)
+
+        when 'faccess'
+
         else
+
           if not @functions[term]
 
             @currCode.push ((v)->
@@ -394,7 +446,33 @@ init = (beeScriptB,Compiler)->
                 console.log 'pushing term ',v
                 @stack.push v
             )(term.val)
+
+      ###
+      when 'faccess'
+
+        @currCode.push ((v)->
+          return ()->
+            console.log 'pushing faccess ',v
+            @stack.push
+        )(term.val)
+      ###
       console.log 'current code after term push' ,@currCode
+    ensureVariableDeclaration: (place,type) =>
+      #this after this place will be in variables
+      if place of @variables
+        console.log 'curr ident of var'
+      else
+        console.log('currIdent not of var its initialisation')
+        console.log 'vars', @variables
+        console.log 'adding to vars'
+        if type is 'obj'
+          @variables[place] =
+            name:place
+            value:{}
+        else
+          @variables[place] =
+            name:place
+            value:0
     assignment: (place ,val) =>
 
       console.log '-------assign---------'
@@ -427,17 +505,7 @@ init = (beeScriptB,Compiler)->
         @currCode.push f
       else
         console.log "rhs------", val
-        #this after this place will be in variables
-        if place of @variables
-          console.log 'curr ident of var'
-        else
-          console.log('currIdent not of var its initialisation')
-          console.log 'vars', @variables
-          console.log 'adding to vars'
-          @variables[place] =
-            name:place
-            value:0
-
+        @ensureVariableDeclaration(place)
         if val.val is 'memory'
           console.log 'rhs is memory',@varAcc
 
@@ -598,7 +666,7 @@ init = (beeScriptB,Compiler)->
     addIDENTI: (name)=>
       console.log 'push identi ', name
       #v= @cmdArr.pop().v
-      
+
       #@cmdArr.push type:v:v[0..-2]
       @cmdArr.push(type:'id',v:name[1..-2])
     addCMD: (name)=>

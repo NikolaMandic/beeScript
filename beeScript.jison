@@ -28,6 +28,7 @@ this.begin('INITIAL');
   this.begin('smode');
   return "S";
 %}
+".." return 'DDOT'
 "." return 'DOT'
 "||" return '||'
 "&&" return '&&'
@@ -79,20 +80,22 @@ EOF
 {return 'newline'; }
     ;
 accessorList :
-     accessorList DOT  IDENT
-     {yy.accessor($3);}
-     |
-     DOT IDENT 
-     { yy.accessor($2);}
-     ;
+  accessorList DDOT IDENT { yy.accessorD($3); }
+  |
+  DDOT IDENT { yy.accessorD($2); }
+  |
+  accessorList DOT  IDENT {yy.accessor($3);}
+  |
+  DOT IDENT { yy.accessor($2);}
+  ;
 fieldAccess :  id accessorList %{ 
   if($1==='memory'){
     $$='memory'
   }else{
     $$ = 'field'
   }
+  yy.fieldAccess($1,$$)
 %};
-
 id : IDENT { $$ = $1; yy.identFound($1); };
 
 statementList : statement end | statement NEWLINE statementList ;
