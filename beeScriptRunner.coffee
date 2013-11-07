@@ -10,7 +10,7 @@ and object to wrap it all up
 
 ex = """
 a='fsd'
-w..b
+w..a
 """
 init = (beeScriptB,Compiler)->
 
@@ -254,9 +254,12 @@ init = (beeScriptB,Compiler)->
             ((v)->
               ()->
                 obj = @stack.pop()
-                console.log 'accessing objD', obj, ' ', v
+                console.log 'accessing objD like obj.v', obj, ' ', v
                 aV=obj[v]
-                @stack.push obj[v]={}
+                if aV
+                  @stack.push aV
+                else
+                  @stack.push obj[v]={}
 
             )(v.name)
           )
@@ -265,8 +268,14 @@ init = (beeScriptB,Compiler)->
             ((v)->
               ()->
                 obj = @stack.pop()
-                console.log 'accessing obj', obj, ' ', v
-                @stack.push obj[v]={}
+                console.log 'accessing obj like obj[v]', obj, ' ', v
+                console.log @variables[v]
+                val = @variables[v]?.val
+                aV=obj[val]
+                if aV
+                  @stack.push aV
+                else
+                  @stack.push obj[val]={}
             )(v.name)
           )
     accessorD: (name) =>
@@ -294,13 +303,10 @@ init = (beeScriptB,Compiler)->
         else
           throw new Error('accessing memory with undefined variable')
       else
-
-        ###
         @varAccArr.push(
-          v:name
+          name:name
           type:'ident'
         )
-        ###
 
       console.log name
     condition:(term)=>

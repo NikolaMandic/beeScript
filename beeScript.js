@@ -86,13 +86,13 @@ case 1:return $$[$0-1];
 break;
 case 2:return 'newline'; 
 break;
-case 3: yy.accessorD($$[$0]); 
+case 3: yy.accessor($$[$0]); 
 break;
-case 4: yy.accessorD($$[$0]); 
+case 4: yy.accessor($$[$0]); 
 break;
-case 5:yy.accessor($$[$0]);
+case 5:yy.accessorD($$[$0]);
 break;
-case 6: yy.accessor($$[$0]);
+case 6: yy.accessorD($$[$0]);
 break;
 case 7: 
   if($$[$0-1]==='memory'){

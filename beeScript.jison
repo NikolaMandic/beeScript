@@ -80,13 +80,13 @@ EOF
 {return 'newline'; }
     ;
 accessorList :
-  accessorList DDOT IDENT { yy.accessorD($3); }
+  accessorList DDOT IDENT { yy.accessor($3); }
   |
-  DDOT IDENT { yy.accessorD($2); }
+  DDOT IDENT { yy.accessor($2); }
   |
-  accessorList DOT  IDENT {yy.accessor($3);}
+  accessorList DOT  IDENT {yy.accessorD($3);}
   |
-  DOT IDENT { yy.accessor($2);}
+  DOT IDENT { yy.accessorD($2);}
   ;
 fieldAccess :  id accessorList %{ 
   if($1==='memory'){

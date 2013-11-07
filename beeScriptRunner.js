@@ -13,7 +13,7 @@ and object to wrap it all up
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  ex = "a='fsd'\nw..b";
+  ex = "a='fsd'\nw..a";
 
   init = function(beeScriptB, Compiler) {
     var DiskotekStackMGenerator, DiskotekStackMachine, Error, Runner, Toolkit, beeScript, diskotekLib, t, _ref;
@@ -346,18 +346,29 @@ and object to wrap it all up
               return function() {
                 var aV, obj;
                 obj = this.stack.pop();
-                console.log('accessing objD', obj, ' ', v);
+                console.log('accessing objD like obj.v', obj, ' ', v);
                 aV = obj[v];
-                return this.stack.push(obj[v] = {});
+                if (aV) {
+                  return this.stack.push(aV);
+                } else {
+                  return this.stack.push(obj[v] = {});
+                }
               };
             })(v.name)));
           } else {
             _results.push(this.currCode.push((function(v) {
               return function() {
-                var obj;
+                var aV, obj, val, _ref2;
                 obj = this.stack.pop();
-                console.log('accessing obj', obj, ' ', v);
-                return this.stack.push(obj[v] = {});
+                console.log('accessing obj like obj[v]', obj, ' ', v);
+                console.log(this.variables[v]);
+                val = (_ref2 = this.variables[v]) != null ? _ref2.val : void 0;
+                aV = obj[val];
+                if (aV) {
+                  return this.stack.push(aV);
+                } else {
+                  return this.stack.push(obj[val] = {});
+                }
               };
             })(v.name)));
           }
@@ -392,13 +403,10 @@ and object to wrap it all up
             throw new Error('accessing memory with undefined variable');
           }
         } else {
-          /*
-          @varAccArr.push(
-            v:name
-            type:'ident'
-          )
-          */
-
+          this.varAccArr.push({
+            name: name,
+            type: 'ident'
+          });
         }
         return console.log(name);
       };
