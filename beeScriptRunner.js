@@ -16,7 +16,8 @@ and object to wrap it all up
   ex = "a='fsd'\nw..a";
 
   init = function(beeScriptB, Compiler) {
-    var DiskotekStackMGenerator, DiskotekStackMachine, Error, Runner, Toolkit, beeScript, diskotekLib, t, _ref;
+    var DiskotekStackMGenerator, DiskotekStackMachine, Error, Runner, Toolkit, beeScript, diskotekLib, t,
+      _this = this;
     beeScript = beeScriptB;
     beeScript.lexer.lex = function() {
       var r;
@@ -109,6 +110,9 @@ and object to wrap it all up
           'stop': ''
         };
       },
+      render: function() {
+        return diskotekLib.$rootScope.$emit('refreshView');
+      },
       regset: function(reg, val) {
         return console.log('setting %s to ', reg, val);
       },
@@ -120,7 +124,7 @@ and object to wrap it all up
       },
       sendCMD: function(cmd) {
         console.log("sending cmd: ", cmd.join(''));
-        return this.command(cmd.slice(1));
+        return this.command(cmd.join(''));
       }
     };
     /*
@@ -142,6 +146,10 @@ and object to wrap it all up
 
     DiskotekStackMGenerator = (function(_super) {
       __extends(DiskotekStackMGenerator, _super);
+
+      DiskotekStackMGenerator.prototype.diskotekLib = diskotekLib;
+
+      DiskotekStackMGenerator.prototype.sVariables = {};
 
       function DiskotekStackMGenerator() {
         this.addCMD = __bind(this.addCMD, this);
@@ -167,57 +175,45 @@ and object to wrap it all up
         this.argDFound = __bind(this.argDFound, this);
         this.methodDeff = __bind(this.methodDeff, this);
         this.argFound = __bind(this.argFound, this);
-        _ref = DiskotekStackMGenerator.__super__.constructor.apply(this, arguments);
-        return _ref;
+        var k, v, _ref;
+        this.functions = {};
+        this.variables = {};
+        _ref = this.sVariables;
+        for (k in _ref) {
+          v = _ref[k];
+          this.variables[k] = v;
+        }
+        this.stack = [];
+        this.progP = {
+          c: 0,
+          block: null
+        };
+        this.execCode = [];
+        this.currArgs = {};
+        this.currArgsD = {};
+        this.currArgC = 0;
+        this.currIdent = '';
+        this.p = {
+          ip: null
+        };
+        this.varAcc = null;
+        this.insideMethodDeff = false;
+        this.currCode = [];
+        this.currCodeStack = [];
+        this.currFuncName = '';
+        this.currFuncNStack = [];
+        this.callStack = [];
+        this.varAccArr = [];
+        this.cmdToSend = '';
+        this.cmdArr = [];
       }
-
-      DiskotekStackMGenerator.prototype.diskotekLib = diskotekLib;
-
-      DiskotekStackMGenerator.prototype.functions = {};
-
-      DiskotekStackMGenerator.prototype.execCode = [];
-
-      DiskotekStackMGenerator.prototype.currArgs = {};
-
-      DiskotekStackMGenerator.prototype.currArgsD = {};
-
-      DiskotekStackMGenerator.prototype.currArgC = 0;
-
-      DiskotekStackMGenerator.prototype.currIdent = '';
-
-      DiskotekStackMGenerator.prototype.variables = {};
-
-      DiskotekStackMGenerator.prototype.stack = [];
-
-      DiskotekStackMGenerator.p = {
-        ip: null
-      };
-
-      DiskotekStackMGenerator.prototype.progP = {
-        c: 0,
-        block: null
-      };
-
-      DiskotekStackMGenerator.prototype.varAcc = null;
-
-      DiskotekStackMGenerator.prototype.insideMethodDeff = false;
-
-      DiskotekStackMGenerator.prototype.currCode = [];
-
-      DiskotekStackMGenerator.prototype.currCodeStack = [];
-
-      DiskotekStackMGenerator.prototype.currFuncName = '';
-
-      DiskotekStackMGenerator.prototype.currFuncNStack = [];
-
-      DiskotekStackMGenerator.prototype.callStack = [];
 
       DiskotekStackMGenerator.prototype.argFound = function(arg) {
         return this.currArgC += 1;
       };
 
       DiskotekStackMGenerator.prototype.methodDeff = function(name) {
-        var fcode, _ref1;
+        var fcode, _ref;
         this.currArgsD = {};
         console.log("starting mem definition");
         console.log('=======' + name + '========');
@@ -233,7 +229,7 @@ and object to wrap it all up
           this.currFuncNStack.push(this.currFuncName);
         } else {
           console.log('current code before method def', this.currCode);
-          [].splice.apply(this.execCode, [-1, 0 - -1 + 1].concat(_ref1 = this.currCode)), _ref1;
+          [].splice.apply(this.execCode, [-1, 0 - -1 + 1].concat(_ref = this.currCode)), _ref;
           this.currFuncNStack.push(this.currFuncName);
           this.currCode = [];
           this.insideMethodDeff = true;
@@ -275,13 +271,13 @@ and object to wrap it all up
       };
 
       DiskotekStackMGenerator.prototype.methodCall = function(name) {
-        var cf, f, _ref1, _ref2;
+        var cf, f, _ref, _ref1;
         console.log('trying to call method %s', name);
-        f = (_ref1 = this.functions) != null ? _ref1[name] : void 0;
+        f = (_ref = this.functions) != null ? _ref[name] : void 0;
         if (f) {
           console.log("method is a func defined");
           this.currCode.push(function() {
-            var arg, oldP, val, _ref2, _results;
+            var arg, oldP, val, _ref1, _results;
             console.log("pushing ppointer c= ", this.progP.c);
             oldP = {
               c: this.progP.c,
@@ -291,10 +287,10 @@ and object to wrap it all up
             this.callStack.push(oldP);
             this.progP.c = 0;
             this.progP.block = f.code;
-            _ref2 = f.args;
+            _ref1 = f.args;
             _results = [];
-            for (arg in _ref2) {
-              val = _ref2[arg];
+            for (arg in _ref1) {
+              val = _ref1[arg];
               _results.push(this.currArgs[arg] = this.stack.pop());
             }
             return _results;
@@ -302,7 +298,7 @@ and object to wrap it all up
           return console.log("pushed entry current code", this.currCode);
         } else {
           console.log('trying to search in lib');
-          f = (_ref2 = diskotekLib != null ? diskotekLib[name] : void 0) != null ? _ref2 : null;
+          f = (_ref1 = diskotekLib != null ? diskotekLib[name] : void 0) != null ? _ref1 : null;
           if (f) {
             cf = f.bind(this, this.stack);
             this.currCode.push(cf);
@@ -326,10 +322,8 @@ and object to wrap it all up
         return this.currIdent = name;
       };
 
-      DiskotekStackMGenerator.prototype.varAccArr = [];
-
       DiskotekStackMGenerator.prototype.fieldAccess = function(name, type) {
-        var v, _i, _len, _ref1, _results;
+        var v, _i, _len, _ref, _results;
         console.log('fieldAccess', this.varAccArr);
         this.ensureVariableDeclaration(name, 'obj');
         this.currCode.push((function(v) {
@@ -337,10 +331,10 @@ and object to wrap it all up
             return this.stack.push(v.value);
           };
         })(this.variables[name]));
-        _ref1 = this.varAccArr;
+        _ref = this.varAccArr;
         _results = [];
-        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          v = _ref1[_i];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          v = _ref[_i];
           if (v.type === 'litteral') {
             _results.push(this.currCode.push((function(v) {
               return function() {
@@ -358,11 +352,11 @@ and object to wrap it all up
           } else {
             _results.push(this.currCode.push((function(v) {
               return function() {
-                var aV, obj, val, _ref2;
+                var aV, obj, val, _ref1;
                 obj = this.stack.pop();
                 console.log('accessing obj like obj[v]', obj, ' ', v);
                 console.log(this.variables[v]);
-                val = (_ref2 = this.variables[v]) != null ? _ref2.val : void 0;
+                val = (_ref1 = this.variables[v]) != null ? _ref1.value : void 0;
                 aV = obj[val];
                 if (aV) {
                   return this.stack.push(aV);
@@ -414,8 +408,8 @@ and object to wrap it all up
       DiskotekStackMGenerator.prototype.condition = function(term) {
         return this.currCode.push((function(v) {
           return function() {
-            var _ref1;
-            if ((_ref1 = this.stack.pop()) !== 0 && _ref1 !== "") {
+            var _ref;
+            if ((_ref = this.stack.pop()) !== 0 && _ref !== "") {
               this.stack.push(true);
               return console.log('pushing to stack true');
             } else {
@@ -438,7 +432,7 @@ and object to wrap it all up
       };
 
       DiskotekStackMGenerator.prototype.endWhile = function() {
-        var _ref1;
+        var _ref;
         console.log('code after while ', this.currCode);
         this.currCode.push((function(l) {
           return function() {
@@ -459,7 +453,7 @@ and object to wrap it all up
           };
         })(this.currCode.length));
         this.oldCode = this.blockStack.pop();
-        [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref1 = this.currCode)), _ref1;
+        [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref = this.currCode)), _ref;
         console.log('code after while ', this.oldCode);
         this.currCode = this.oldCode;
         console.log('end while', this.blockStack);
@@ -522,11 +516,11 @@ and object to wrap it all up
             } else {
               this.currCode.push((function(v) {
                 return function() {
-                  var _ref1, _ref2, _ref3, _ref4, _ref5;
-                  console.log('pushing variable %s in vars = %s', v, ((_ref1 = this.variables[v]) != null ? _ref1.value : void 0) != null);
-                  console.log('in args = ', (_ref2 = this.currArgs) != null ? _ref2[v] : void 0);
+                  var _ref, _ref1, _ref2, _ref3, _ref4;
+                  console.log('pushing variable %s in vars = %s', v, ((_ref = this.variables[v]) != null ? _ref.value : void 0) != null);
+                  console.log('in args = ', (_ref1 = this.currArgs) != null ? _ref1[v] : void 0);
                   console.log(this.currArgs);
-                  return this.stack.push((_ref3 = (_ref4 = this.currArgs) != null ? _ref4[v] : void 0) != null ? _ref3 : ((_ref5 = this.variables[v]) != null ? _ref5.value : void 0) != null);
+                  return this.stack.push((_ref2 = (_ref3 = this.currArgs) != null ? _ref3[v] : void 0) != null ? _ref2 : ((_ref4 = this.variables[v]) != null ? _ref4.value : void 0) != null);
                 };
               })(term.val));
             }
@@ -715,7 +709,7 @@ and object to wrap it all up
       };
 
       DiskotekStackMGenerator.prototype.endIf = function() {
-        var _ref1;
+        var _ref;
         console.log('code after if ', this.currCode);
         this.currCode.unshift((function(l) {
           return function() {
@@ -731,7 +725,7 @@ and object to wrap it all up
           };
         })(this.currCode.length));
         this.oldCode = this.blockStack.pop();
-        [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref1 = this.currCode)), _ref1;
+        [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref = this.currCode)), _ref;
         console.log('code after if ', this.oldCode);
         this.currCode = this.oldCode;
         return console.log('end if', this.blockStack);
@@ -744,7 +738,7 @@ and object to wrap it all up
       };
 
       DiskotekStackMGenerator.prototype.endElse = function() {
-        var _ref1;
+        var _ref;
         console.log(this.blockStack, this.blockStack[this.blockStack.length - 1]);
         this.blockStack[this.blockStack.length - 1].push((function(l) {
           return function() {
@@ -753,14 +747,10 @@ and object to wrap it all up
           };
         })(this.currCode.length));
         this.oldCode = this.blockStack.pop();
-        [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref1 = this.currCode)), _ref1;
+        [].splice.apply(this.oldCode, [-1, 0 - -1 + 1].concat(_ref = this.currCode)), _ref;
         this.currCode = this.oldCode;
         return console.log('end else', this.blockStack);
       };
-
-      DiskotekStackMGenerator.prototype.cmdToSend = '';
-
-      DiskotekStackMGenerator.prototype.cmdArr = [];
 
       DiskotekStackMGenerator.prototype.addIDENTI = function(name) {
         console.log('push identi ', name);
@@ -784,7 +774,7 @@ and object to wrap it all up
 
       DiskotekStackMGenerator.prototype.sendCMD = function(cmd) {
         console.log('sendCMD ', cmd, this.cmdArr);
-        return this.currCode.push((function(v, cmdArr) {
+        this.currCode.push((function(v, cmdArr) {
           return function() {
             var $this, cmdArrE;
             $this = this;
@@ -798,11 +788,12 @@ and object to wrap it all up
             return this.diskotekLib.sendCMD(cmdArrE);
           };
         })(cmd, this.cmdArr.slice()));
+        return this.cmdArr = [];
       };
 
       DiskotekStackMGenerator.prototype.end = function() {
-        var _ref1;
-        return ([].splice.apply(this.execCode, [-1, 0 - -1 + 1].concat(_ref1 = this.currCode)), _ref1);
+        var _ref;
+        return ([].splice.apply(this.execCode, [-1, 0 - -1 + 1].concat(_ref = this.currCode)), _ref);
       };
 
       DiskotekStackMGenerator.prototype.dumpCode = function() {
@@ -914,13 +905,20 @@ and object to wrap it all up
         this["continue"] = __bind(this["continue"], this);
         this.run = __bind(this.run, this);
         this.generate = __bind(this.generate, this);
-        var _ref1;
+        this.reset = __bind(this.reset, this);
+        var _ref;
         this.parser = beeScript;
         this.generator = new DiskotekStackMGenerator();
         this.parser.yy = this.generator;
         this.runner = new Runner(beeScript.yy);
-        this.text = (_ref1 = options != null ? options.text : void 0) != null ? _ref1 : '';
+        this.text = (_ref = options != null ? options.text : void 0) != null ? _ref : '';
       }
+
+      Toolkit.prototype.reset = function() {
+        this.generator = new DiskotekStackMGenerator();
+        this.parser.yy = this.generator;
+        return this.runner = new Runner(beeScript.yy);
+      };
 
       Toolkit.prototype.generate = function() {
         this.parser.parse(this.text);

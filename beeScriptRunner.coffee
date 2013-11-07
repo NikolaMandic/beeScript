@@ -78,6 +78,9 @@ init = (beeScriptB,Compiler)->
       else
         @vm.stack.push(val)
       {'stop':''}
+    render:()=>
+
+      diskotekLib.$rootScope.$emit('refreshView')
     regset: (reg,val)->
       console.log 'setting %s to ', reg,val
     regread: (reg)->
@@ -87,7 +90,8 @@ init = (beeScriptB,Compiler)->
     sendCMD: (cmd)->
 
       console.log "sending cmd: ", cmd.join('')
-      @command(cmd[1..])
+
+      @command(cmd.join(''))
   ###
   this is stack machine vm input generator
   it extends compiler and overwrites production actions of a parser
@@ -108,28 +112,38 @@ init = (beeScriptB,Compiler)->
 
 
     diskotekLib : diskotekLib
-    functions:{}
+    sVariables:{}
+    constructor:()->
 
-    execCode: []
-    currArgs:{}
-    currArgsD:{}
-    currArgC:0
-    currIdent:''
-    variables : {}
-    stack:[]
-    @p=
-      ip:null
-    progP:
-      c:0
-      block:null
+      @functions={}
+      @variables={}
+      for k,v of @sVariables
+        @variables[k]=v
+      @stack=[]
+      @progP=
+        c:0
+        block:null
 
-    varAcc: null
-    insideMethodDeff: false
-    currCode:[]
-    currCodeStack:[]
-    currFuncName:''
-    currFuncNStack:[]
-    callStack:[]
+      @execCode= []
+      @currArgs={}
+      @currArgsD={}
+      @currArgC=0
+      @currIdent=''
+      @p=
+        ip:null
+      @varAcc= null
+      @insideMethodDeff= false
+      @currCode=[]
+      @currCodeStack=[]
+      @currFuncName=''
+      @currFuncNStack=[]
+      @callStack=[]
+
+      @varAccArr=[]
+
+
+      @cmdToSend=''
+      @cmdArr=[]
     argFound: (arg) =>
       @currArgC+=1
     methodDeff: (name) =>
@@ -237,7 +251,6 @@ init = (beeScriptB,Compiler)->
     identFound : (name) =>
       @currIdent = name
 
-    varAccArr:[]
     fieldAccess: (name,type)=>
       console.log 'fieldAccess', @varAccArr
       @ensureVariableDeclaration(name,'obj')
@@ -270,7 +283,7 @@ init = (beeScriptB,Compiler)->
                 obj = @stack.pop()
                 console.log 'accessing obj like obj[v]', obj, ' ', v
                 console.log @variables[v]
-                val = @variables[v]?.val
+                val = @variables[v]?.value
                 aV=obj[val]
                 if aV
                   @stack.push aV
@@ -666,9 +679,6 @@ init = (beeScriptB,Compiler)->
       @currCode=@oldCode
 
       console.log 'end else', @blockStack
-
-    cmdToSend:''
-    cmdArr:[]
     addIDENTI: (name)=>
       console.log 'push identi ', name
       #v= @cmdArr.pop().v
@@ -693,6 +703,7 @@ init = (beeScriptB,Compiler)->
               v.v
           @diskotekLib.sendCMD cmdArrE
         )(cmd,@cmdArr.slice())
+      @cmdArr=[]
     end:->
       @execCode[-1..0]=@currCode
 
@@ -772,7 +783,13 @@ init = (beeScriptB,Compiler)->
       @parser.yy=@generator
       @runner = new Runner beeScript.yy
       @text = options?.text ? ''
+    reset:()=>
+      @generator=new DiskotekStackMGenerator()
+      @parser.yy=@generator
+      @runner = new Runner beeScript.yy
     generate:()=>
+
+
       @parser.parse(@text)
       @generator.end()
     run:()=>

@@ -11,9 +11,9 @@
 
 
 <smode>\#\w+[ ]+ return "IDENTI";
-<smode>[^#]+ return "CMD";  
+<smode>[^#\n]+ return "CMD";  
 
-<smode>\n %{
+<smode>[^\n]* %{
 this.begin('INITIAL');
 %}
 
