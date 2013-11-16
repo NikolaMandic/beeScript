@@ -939,7 +939,7 @@ and object to wrap it all up
       };
 
       Toolkit.prototype.repl = function(line) {
-        var ans, readline, rl, rpl,
+        var ans, func, readline, rl, rpl,
           _this = this;
         readline = require('readline');
         rl = readline.createInterface({
@@ -947,16 +947,34 @@ and object to wrap it all up
           output: process.stdout
         });
         ans = true;
+        func = [];
         rpl = function() {
           return rl.question("> ", function(answer) {
             console.log(answer);
-            if (answer) {
-              _this.parser.parse(answer);
-              _this.generator.end();
-              _this.runner.run();
+            if (func.length > 0) {
+              func.push(answer);
+              if (!answer) {
+                console.log("function end");
+                _this.parser.parse(func.join("\n"));
+                _this.generator.end();
+                func = [];
+              }
               return rpl();
             } else {
-              return rl.close();
+              if (answer.match(/^def.*/)) {
+                console.log("matches def");
+                func.push(answer);
+                return rpl();
+              } else {
+                if (answer) {
+                  _this.parser.parse(answer);
+                  _this.generator.end();
+                  _this.runner.run();
+                  return rpl();
+                } else {
+                  return rl.close();
+                }
+              }
             }
           });
         };

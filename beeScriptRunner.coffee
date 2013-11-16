@@ -814,17 +814,34 @@ init = (beeScriptB,Compiler)->
         output: process.stdout
       })
       ans=true
+      func=[]
       rpl=()=>
         rl.question("> ", (answer)=>
           console.log answer
-          if answer
-            @parser.parse(answer)
-            @generator.end()
-            @runner.run()
+          if func.length > 0
+            func.push answer
+            if not answer
+              console.log "function end"
+              @parser.parse(func.join("\n"))
+              @generator.end()
+              #@runner.run()
+              func = []
+
             rpl()
           else
+            if answer.match /^def.*/
+              console.log "matches def"
+              func.push answer
+              rpl()
+            else
+              if answer
+                @parser.parse(answer)
+                @generator.end()
+                @runner.run()
+                rpl()
+              else
 
-            rl.close()
+                rl.close()
         )
       rpl()
     generate:()=>
