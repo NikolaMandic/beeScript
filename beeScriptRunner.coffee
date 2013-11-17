@@ -815,23 +815,26 @@ init = (beeScriptB,Compiler)->
       })
       ans=true
       func=[]
+      f=[]
       rpl=()=>
         rl.question("> ", (answer)=>
           console.log answer
           if func.length > 0
-            func.push answer
+            func[func.length-1].push answer
             if not answer
-              console.log "function end"
-              @parser.parse(func.join("\n"))
-              @generator.end()
-              #@runner.run()
-              func = []
-
+              lastBlock = func.pop
+              f.push lastBlock.join('\n')
+              if func.length==0
+                console.log "function end"
+                @parser.parse(f.join("\n"))
+                @generator.end()
+                #@runner.run()
             rpl()
           else
-            if answer.match /^def.*/
+            if answer.match /^def.*/ or answer.match /^while.*/
               console.log "matches def"
-              func.push answer
+              func.push []
+              func[func.length-1].push answer
               rpl()
             else
               if answer
