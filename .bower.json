@@ -1,0 +1,21 @@
+{
+  "name": "beescript",
+  "dependencies": {
+    "sass-bootstrap": "~3.0.0",
+    "requirejs": "~2.1.8",
+    "modernizr": "~2.6.2",
+    "jquery": "~1.10.2",
+    "ace": "*"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/NikolaMandic/beeScript",
+  "_release": "9ef6e45d80",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "9ef6e45d803af90bbf14360b0e0c8898ec400827"
+  },
+  "_source": "https://github.com/NikolaMandic/beeScript.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/NikolaMandic/beeScript.git"
+}
