@@ -808,11 +808,16 @@ and object to wrap it all up
       };
 
       DiskotekStackMGenerator.prototype.end = function() {
-        var _ref;
+        var code, _i, _len, _ref;
         console.log("end called");
-        console.log(this.execCode);
-        console.log(this.currCode);
-        return ([].splice.apply(this.execCode, [-1, 0 - -1 + 1].concat(_ref = this.currCode)), _ref);
+        console.log('execCode after end: ', this.execCode);
+        console.log('currCode after end: ', this.currCode);
+        _ref = this.currCode;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          code = _ref[_i];
+          this.execCode.push(code);
+        }
+        return this.currCode.length = 0;
       };
 
       DiskotekStackMGenerator.prototype.dumpCode = function() {

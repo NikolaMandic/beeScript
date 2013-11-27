@@ -723,11 +723,13 @@ init = (beeScriptB,Compiler)->
       @cmdArr=[]
     end:->
       console.log "end called"
-      console.log @execCode
-      console.log @currCode
+      console.log 'execCode after end: ', @execCode
+      console.log 'currCode after end: ', @currCode
+      for code in @currCode
+        @execCode.push code
 
-      @execCode[-1..0]=@currCode
-
+      # @execCode[-1..0]=@currCode
+      @currCode.length=0
     dumpCode:->
       console.log '---------code-----------'
       console.dir @execCode
