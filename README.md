@@ -18,3 +18,7 @@ documentation in the making  http://nikolamandic.github.io/beeScript/
     
     
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/NikolaMandic/beescript/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
