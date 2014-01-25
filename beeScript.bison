@@ -11,6 +11,26 @@
 
 
 /* lexical grammar */
+%token ANY
+%token CMD
+%token DDOT
+%token DEF
+%token DOT
+%token ELSE
+%token EOF
+%token EQ
+%token HDRESS
+%token IDENT
+%token IDENTI
+%token IF
+%token NEWLINE
+%token NUMBER
+%token S
+%token STRING
+%token WHILE
+%token e
+%token fa
+
 
 
 /* operator associations and precedence */
@@ -40,14 +60,14 @@ accessorList :
   |
   DOT IDENT { yy.accessorD($2);}
   ;
-fieldAccess :  id accessorList %{ 
+fieldAccess :  id accessorList { 
   if($1==='memory'){
     $$='memory'
   }else{
     $$ = 'field'
   }
   yy.fieldAccess($1,$$)
-%};
+};
 id : IDENT { $$ = $1; yy.identFound($1); };
 
 statementList : statement end | statement NEWLINE statementList ;
@@ -146,36 +166,36 @@ expList : term { $$ = $1; yy.termExprFound($1);  }
 ;
 */
 
-term: STRING %{ $$={ type:'string',
+term: STRING { $$={ type:'string',
                val: yytext
              }
            //  yy.stringtermfound(yytext);
-%}
+}
 |funcSig { yy.methodCall($1); }
-| HDRESS  %{ $$={ type:'hdress',
+| HDRESS  { $$={ type:'hdress',
                val: yytext
                }
            //  yy.hdresstermfound(yytext);
 
-%}
-| id   %{ $$={ type:'id',
+}
+| id   { $$={ type:'id',
                val: $1
               }
 
             // yy.idtermfound($1);
-%}
-| NUMBER    %{ $$={ type:'num',
+}
+| NUMBER    { $$={ type:'num',
                val: $1
                }
 
             // yy.numbertermfound($1);
-%}
-| fieldAccess   %{ $$={ type:'faccess',
+}
+| fieldAccess   { $$={ type:'faccess',
                val: $1
                }
 
             // yy.fatermfound($1);
-%};
+};
 %%
 if (typeof module === "undefined" ||  module === null) {
 define(function(){
