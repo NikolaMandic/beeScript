@@ -52,7 +52,7 @@ extern int yydebug;
      DEF = 261,
      DOT = 262,
      ELSE = 263,
-     EOF = 264,
+     EOFF = 264,
      EQ = 265,
      HDRESS = 266,
      IDENT = 267,

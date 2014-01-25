@@ -566,7 +566,7 @@ char *yytext;
 #line 2 "beeScript.lex"
 /* need this for the call to atof() below */
 #include <math.h>
-#include <name.tab.h>
+#include "name.tab.h"
   int yywrap(){};
 
 #line 573 "lex.yy.c"
@@ -1041,12 +1041,12 @@ return "IDENT";
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(smode):
 #line 60 "beeScript.lex"
-return 'EOF';
+return EOFF;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 62 "beeScript.lex"
-return 'ANY';
+return ANY;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP

@@ -1,7 +1,7 @@
 %{
 /* need this for the call to atof() below */
 #include <math.h>
-#include <name.tab.h>
+#include "name.tab.h"
   int yywrap(){};
 %}
 
@@ -57,9 +57,9 @@ BEGIN(INITIAL);
 %
 \'[^"]+\' return 'STRING';
 \w+ return "IDENT";
-<<EOF>> return 'EOF';
+<<EOF>> return EOFF;
 
-. return 'ANY';
+. return ANY;
 
 
 

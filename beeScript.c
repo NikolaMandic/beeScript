@@ -66,13 +66,13 @@
 #line 4 "beeScript.bison"
 
        #include <stdio.h>
-       #include <lex.cc.c>
+       
        #define YYSTYPE char const *
        int yylex (void);
        void yyerror (char const *);
      
 /* Line 371 of yacc.c  */
-#line 76 "beeScript.tab.bison"
+#line 76 "beeScript.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -114,7 +114,7 @@ extern int yydebug;
      DEF = 261,
      DOT = 262,
      ELSE = 263,
-     EOF = 264,
+     EOFF = 264,
      EQ = 265,
      HDRESS = 266,
      IDENT = 267,
@@ -160,7 +160,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 164 "beeScript.tab.bison"
+#line 164 "beeScript.c"
 
 #ifdef short
 # undef short
@@ -496,7 +496,7 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "ANY", "CMD", "DDOT", "DEF", "DOT",
-  "ELSE", "EOF", "EQ", "HDRESS", "IDENT", "IDENTI", "IF", "NEWLINE",
+  "ELSE", "EOFF", "EQ", "HDRESS", "IDENT", "IDENTI", "IF", "NEWLINE",
   "NUMBER", "S", "STRING", "WHILE", "e", "fa", "'+'", "'-'", "'*'", "'/'",
   "'^'", "UMINUS", "\"(\"", "\")\"", "\"==\"", "\"!=\"", "\"&&\"",
   "\"||\"", "\"<\"", "\">\"", "\",\"", "\"+\"", "\"-\"", "\"/\"", "\"*\"",
@@ -1757,7 +1757,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 1761 "beeScript.tab.bison"
+#line 1761 "beeScript.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

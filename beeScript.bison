@@ -3,7 +3,7 @@
  * */
      %{
        #include <stdio.h>
-       #include <lex.cc.c>
+       
        #define YYSTYPE char const *
        int yylex (void);
        void yyerror (char const *);
@@ -17,7 +17,7 @@
 %token DEF
 %token DOT
 %token ELSE
-%token EOF
+%token EOFF
 %token EQ
 %token HDRESS
 %token IDENT
@@ -45,10 +45,10 @@
 %% /* language grammar */
 
 expressions
-    : e EOF
+    : e EOFF
         {return $1;}
     | e NEWLINE
-EOF
+EOFF
 {return 'newline'; }
     ;
 accessorList :
@@ -71,7 +71,7 @@ fieldAccess :  id accessorList {
 id : IDENT { $$ = $1; yy.identFound($1); };
 
 statementList : statement end | statement NEWLINE statementList ;
-end : NEWLINE | EOF ;
+end : NEWLINE | EOFF ;
 statement: expressionStatement 
 | ifs
 | whiles
