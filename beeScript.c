@@ -69,7 +69,7 @@
        
        #define YYSTYPE char const *
        int yylex (void);
-       void yyerror (char const *);
+       void yyerror (char const *c){};
      
 /* Line 371 of yacc.c  */
 #line 76 "beeScript.c"
@@ -140,7 +140,12 @@ extern int yydebug;
      OR = 287,
      MUL = 288,
      AND = 289,
-     UMINUS = 290
+     REGS = 290,
+     MIN = 291,
+     EXPONENT = 292,
+     PII = 293,
+     EE = 294,
+     UMINUS = 295
    };
 #endif
 
@@ -173,7 +178,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 177 "beeScript.c"
+#line 182 "beeScript.c"
 
 #ifdef short
 # undef short
@@ -396,7 +401,7 @@ union yyalloc
 #define YYLAST   121
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  41
+#define YYNTOKENS  46
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  37
 /* YYNRULES -- Number of rules.  */
@@ -406,7 +411,7 @@ union yyalloc
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   290
+#define YYMAXUTOK   295
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -418,12 +423,12 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,    37,    35,     2,    36,     2,    38,     2,     2,
+       2,     2,    42,    40,     2,    41,     2,    43,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    39,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    44,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -443,7 +448,7 @@ static const yytype_uint8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      40
+      35,    36,    37,    38,    39,    45
 };
 
 #if YYDEBUG
@@ -464,42 +469,42 @@ static const yytype_uint8 yyprhs[] =
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      45,     0,    -1,    42,     5,    12,    -1,     5,    12,    -1,
-      42,     7,    12,    -1,     7,    12,    -1,    44,    42,    -1,
-      12,    -1,    47,    46,    -1,    47,    15,    45,    -1,    15,
-      -1,     9,    -1,    51,    -1,    58,    -1,    52,    -1,    60,
-      -1,    49,    27,    28,    50,    45,    -1,    49,    27,    67,
-      28,    50,    45,    -1,    49,    21,    27,    67,    28,    50,
-      45,    -1,    49,    21,    27,    28,    50,    45,    -1,    12,
-      65,    -1,    17,    48,    -1,    13,    -1,     4,    -1,    48,
-      13,    -1,    48,     4,    -1,     6,    12,    -1,    15,    -1,
-      70,    -1,    71,    -1,    53,    55,    54,    45,    -1,    19,
-      -1,    15,    -1,    55,    56,    76,    -1,    62,    -1,     3,
-      -1,    12,    27,    28,    -1,    12,    27,    65,    28,    -1,
-      14,    62,    59,    45,    -1,    15,    -1,    58,     8,    61,
-      45,    -1,    15,    -1,    76,    -1,    76,    64,    76,    -1,
-      71,    -1,    22,    -1,    31,    -1,    34,    -1,    32,    -1,
-      23,    -1,    24,    -1,    63,    -1,    63,    66,    -1,    25,
-      63,    -1,    25,    63,    66,    -1,    69,    -1,    69,    68,
-      -1,    25,    69,    -1,    25,    69,    68,    -1,    12,    -1,
-      43,    10,    71,    -1,    44,    10,    71,    -1,    72,    -1,
-      73,    74,    72,    -1,    73,    -1,    77,    75,    73,    -1,
-      77,    -1,    30,    -1,    29,    -1,    26,    -1,    33,    -1,
-      72,    -1,    18,    -1,    57,    -1,    11,    -1,    44,    -1,
-      16,    -1,    43,    -1
+      50,     0,    -1,    47,     5,    12,    -1,     5,    12,    -1,
+      47,     7,    12,    -1,     7,    12,    -1,    49,    47,    -1,
+      12,    -1,    52,    51,    -1,    52,    15,    50,    -1,    15,
+      -1,     9,    -1,    56,    -1,    63,    -1,    57,    -1,    65,
+      -1,    54,    27,    28,    55,    50,    -1,    54,    27,    72,
+      28,    55,    50,    -1,    54,    21,    27,    72,    28,    55,
+      50,    -1,    54,    21,    27,    28,    55,    50,    -1,    12,
+      70,    -1,    17,    53,    -1,    13,    -1,     4,    -1,    53,
+      13,    -1,    53,     4,    -1,     6,    12,    -1,    15,    -1,
+      75,    -1,    76,    -1,    58,    60,    59,    50,    -1,    19,
+      -1,    15,    -1,    60,    61,    81,    -1,    67,    -1,     3,
+      -1,    12,    27,    28,    -1,    12,    27,    70,    28,    -1,
+      14,    67,    64,    50,    -1,    15,    -1,    63,     8,    66,
+      50,    -1,    15,    -1,    81,    -1,    81,    69,    81,    -1,
+      76,    -1,    22,    -1,    31,    -1,    34,    -1,    32,    -1,
+      23,    -1,    24,    -1,    68,    -1,    68,    71,    -1,    25,
+      68,    -1,    25,    68,    71,    -1,    74,    -1,    74,    73,
+      -1,    25,    74,    -1,    25,    74,    73,    -1,    12,    -1,
+      48,    10,    76,    -1,    49,    10,    76,    -1,    77,    -1,
+      78,    79,    77,    -1,    78,    -1,    82,    80,    78,    -1,
+      82,    -1,    30,    -1,    29,    -1,    26,    -1,    33,    -1,
+      77,    -1,    18,    -1,    62,    -1,    11,    -1,    49,    -1,
+      16,    -1,    48,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    58,    65,    67,    69,    71,    73,    81,    83,    83,
-      84,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    96,    98,    99,   100,   101,   103,   105,   105,
-     108,   110,   112,   114,   114,   115,   116,   117,   119,   120,
-     122,   123,   125,   126,   127,   128,   128,   128,   128,   128,
-     128,   129,   129,   130,   131,   133,   133,   134,   135,   136,
-     139,   144,   147,   148,   149,   151,   152,   154,   155,   158,
-     159,   162,   179,   184,   185,   191,   197,   203
+       0,    63,    70,    74,    78,    82,    86,    96,   102,   102,
+     103,   103,   104,   105,   106,   107,   108,   111,   114,   117,
+     120,   123,   127,   131,   134,   137,   140,   144,   146,   146,
+     149,   153,   157,   161,   161,   162,   163,   164,   166,   169,
+     173,   176,   180,   183,   184,   187,   187,   187,   187,   187,
+     187,   188,   188,   189,   190,   192,   192,   193,   194,   195,
+     200,   207,   212,   213,   216,   218,   221,   225,   228,   233,
+     236,   241,   274,   282,   285,   293,   301,   308
 };
 #endif
 
@@ -512,13 +517,14 @@ static const char *const yytname[] =
   "ELSE", "EOFF", "EQ", "HDRESS", "IDENT", "IDENTI", "IF", "NEWLINE",
   "NUMBER", "S", "STRING", "WHILE", "e", "fa", "EQEQ", "BIGGER", "SMALLER",
   "COMA", "DIV", "LPAR", "RPAR", "MINUS", "PLUS", "NEQ", "OR", "MUL",
-  "AND", "'+'", "'-'", "'*'", "'/'", "'^'", "UMINUS", "$accept",
-  "accessorList", "fieldAccess", "id", "statementList", "end", "statement",
-  "cmdL", "ms", "bs", "expressionStatement", "whiles", "whkw",
-  "whileStart", "expSList", "sep", "funcSig", "ifs", "ifStatementsStart",
-  "ife", "elseStatementsStart", "condition", "arg", "cop", "argList",
-  "argCommaList", "argListD", "argCommaListD", "argD", "assignment",
-  "expr", "pm", "dm", "pmop", "dmop", "expList", "term", YY_NULL
+  "AND", "REGS", "MIN", "EXPONENT", "PII", "EE", "'+'", "'-'", "'*'",
+  "'/'", "'^'", "UMINUS", "$accept", "accessorList", "fieldAccess", "id",
+  "statementList", "end", "statement", "cmdL", "ms", "bs",
+  "expressionStatement", "whiles", "whkw", "whileStart", "expSList", "sep",
+  "funcSig", "ifs", "ifStatementsStart", "ife", "elseStatementsStart",
+  "condition", "arg", "cop", "argList", "argCommaList", "argListD",
+  "argCommaListD", "argD", "assignment", "expr", "pm", "dm", "pmop",
+  "dmop", "expList", "term", YY_NULL
 };
 #endif
 
@@ -530,22 +536,22 @@ static const yytype_uint16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,    43,    45,    42,    47,    94,
-     290
+     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
+      43,    45,    42,    47,    94,   295
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    41,    42,    42,    42,    42,    43,    44,    45,    45,
-      46,    46,    47,    47,    47,    47,    47,    47,    47,    47,
-      47,    47,    48,    48,    48,    48,    49,    50,    51,    51,
-      52,    53,    54,    55,    55,    56,    57,    57,    58,    59,
-      60,    61,    62,    62,    63,    64,    64,    64,    64,    64,
-      64,    65,    65,    66,    66,    67,    67,    68,    68,    69,
-      70,    70,    71,    72,    72,    73,    73,    74,    74,    75,
-      75,    76,    77,    77,    77,    77,    77,    77
+       0,    46,    47,    47,    47,    47,    48,    49,    50,    50,
+      51,    51,    52,    52,    52,    52,    52,    52,    52,    52,
+      52,    52,    53,    53,    53,    53,    54,    55,    56,    56,
+      57,    58,    59,    60,    60,    61,    62,    62,    63,    64,
+      65,    66,    67,    67,    68,    69,    69,    69,    69,    69,
+      69,    70,    70,    71,    71,    72,    72,    73,    73,    74,
+      75,    75,    76,    77,    77,    78,    78,    79,    79,    80,
+      80,    81,    82,    82,    82,    82,    82,    82
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -667,19 +673,19 @@ static const yytype_int8 yycheck[] =
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     6,    11,    12,    14,    16,    17,    18,    19,    43,
-      44,    45,    47,    49,    51,    52,    53,    57,    58,    60,
-      70,    71,    72,    73,    77,    12,    12,    27,    43,    44,
-      63,    65,    71,    62,    72,    76,     4,    13,    48,    10,
-       5,     7,    10,    42,     0,     9,    15,    46,    21,    27,
-      55,    62,     8,    29,    30,    74,    26,    33,    75,    28,
-      65,    25,    66,    15,    59,    22,    23,    24,    31,    32,
-      34,    64,     4,    13,    71,    12,    12,    71,     5,     7,
-      45,    27,    12,    28,    67,    69,     3,    15,    54,    56,
-      15,    61,    72,    73,    28,    63,    45,    76,    12,    12,
-      28,    67,    15,    50,    28,    25,    68,    45,    76,    45,
-      66,    50,    28,    45,    50,    69,    45,    50,    45,    68,
-      45
+       0,     6,    11,    12,    14,    16,    17,    18,    19,    48,
+      49,    50,    52,    54,    56,    57,    58,    62,    63,    65,
+      75,    76,    77,    78,    82,    12,    12,    27,    48,    49,
+      68,    70,    76,    67,    77,    81,     4,    13,    53,    10,
+       5,     7,    10,    47,     0,     9,    15,    51,    21,    27,
+      60,    67,     8,    29,    30,    79,    26,    33,    80,    28,
+      70,    25,    71,    15,    64,    22,    23,    24,    31,    32,
+      34,    69,     4,    13,    76,    12,    12,    76,     5,     7,
+      50,    27,    12,    28,    72,    74,     3,    15,    59,    61,
+      15,    66,    77,    78,    28,    68,    50,    81,    12,    12,
+      28,    72,    15,    55,    28,    25,    73,    50,    81,    50,
+      71,    55,    28,    50,    55,    74,    50,    55,    50,    73,
+      50
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1481,296 +1487,382 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 65 "beeScript.bison"
-    { yy.accessor((yyvsp[(3) - (3)])); }
+#line 70 "beeScript.bison"
+    { 
+        //yy.accessor($3);
+ }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 67 "beeScript.bison"
-    { yy.accessor((yyvsp[(2) - (2)])); }
+#line 74 "beeScript.bison"
+    {
+// yy.accessor($2);
+ }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 69 "beeScript.bison"
-    {yy.accessorD((yyvsp[(3) - (3)]));}
+#line 78 "beeScript.bison"
+    {
+//yy.accessorD($3);
+}
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 71 "beeScript.bison"
-    { yy.accessorD((yyvsp[(2) - (2)]));}
+#line 82 "beeScript.bison"
+    { 
+//yy.accessorD($2);
+}
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 73 "beeScript.bison"
+#line 86 "beeScript.bison"
     { 
-  if((yyvsp[(1) - (2)])==='memory'){
-    (yyval)='memory'
+/*
+  if($1==='memory'){
+    $$='memory'
   }else{
-    (yyval) = 'field'
+    $$ = 'field'
   }
-  yy.fieldAccess((yyvsp[(1) - (2)]),(yyval))
-;}
+  yy.fieldAccess($1,$$)
+*/
+}
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 81 "beeScript.bison"
-    { (yyval) = (yyvsp[(1) - (1)]); yy.identFound((yyvsp[(1) - (1)])); }
+#line 96 "beeScript.bison"
+    { 
+/*
+$$ = $1; yy.identFound($1); 
+*/
+}
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 89 "beeScript.bison"
-    { yy.methodEnd(); }
+#line 108 "beeScript.bison"
+    {
+// yy.methodEnd();
+ }
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 90 "beeScript.bison"
-    { yy.methodEnd(); }
+#line 111 "beeScript.bison"
+    { 
+//yy.methodEnd();
+ }
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 91 "beeScript.bison"
-    { yy.methodEnd(); }
+#line 114 "beeScript.bison"
+    { 
+//yy.methodEnd();
+ }
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 92 "beeScript.bison"
-    { yy.methodEnd(); }
+#line 117 "beeScript.bison"
+    { 
+//yy.methodEnd();
+ }
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 93 "beeScript.bison"
-    { yy.methodCall((yyvsp[(1) - (2)])); }
+#line 120 "beeScript.bison"
+    { 
+//yy.methodCall($1); 
+}
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 94 "beeScript.bison"
-    {yy.sendCMD((yyvsp[(2) - (2)]));}
+#line 123 "beeScript.bison"
+    {
+//yy.sendCMD($2)
+}
     break;
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 96 "beeScript.bison"
-    {(yyval)=yy.addIDENTI((yyvsp[(1) - (1)]));}
+#line 127 "beeScript.bison"
+    {
+//$$=yy.addIDENTI($1)
+}
     break;
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 98 "beeScript.bison"
-    {(yyval)=yy.addCMD((yyvsp[(1) - (1)]));}
+#line 131 "beeScript.bison"
+    {
+//$$=yy.addCMD($1)
+}
     break;
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 99 "beeScript.bison"
-    {(yyval)=yy.addIDENTI((yyvsp[(2) - (2)]));}
+#line 134 "beeScript.bison"
+    {
+//$$=yy.addIDENTI($2)
+}
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 100 "beeScript.bison"
-    {(yyval)=yy.addCMD((yyvsp[(2) - (2)]));}
+#line 137 "beeScript.bison"
+    {
+//$$=yy.addCMD($2)
+}
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 101 "beeScript.bison"
-    { yy.methodDeff((yyvsp[(2) - (2)]));}
+#line 140 "beeScript.bison"
+    { 
+//yy.methodDeff($2);
+}
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 108 "beeScript.bison"
-    { yy.endWhile();}
+#line 149 "beeScript.bison"
+    { 
+//yy.endWhile();
+}
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 110 "beeScript.bison"
-    {yy.startWhileExpr();}
+#line 153 "beeScript.bison"
+    {
+//yy.startWhileExpr();
+}
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 112 "beeScript.bison"
-    { yy.startWhile(); }
+#line 157 "beeScript.bison"
+    { 
+//yy.startWhile(); 
+}
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 119 "beeScript.bison"
-    { yy.endIf() ;}
+#line 166 "beeScript.bison"
+    { 
+//yy.endIf() 
+}
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 120 "beeScript.bison"
-    { yy.startIf() ;}
+#line 169 "beeScript.bison"
+    { 
+//yy.startIf()
+ }
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 122 "beeScript.bison"
-    { yy.endElse(); }
+#line 173 "beeScript.bison"
+    { 
+//yy.endElse(); 
+}
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 123 "beeScript.bison"
-    {yy.startElse(); }
+#line 176 "beeScript.bison"
+    {
+//yy.startElse();
+ }
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 125 "beeScript.bison"
-    { yy.condition((yyvsp[(1) - (1)])) ;}
+#line 180 "beeScript.bison"
+    { 
+//yy.condition($1)
+ }
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 127 "beeScript.bison"
-    { yy.argFound((yyvsp[(1) - (1)])); }
+#line 184 "beeScript.bison"
+    { 
+//yy.argFound($1); 
+}
     break;
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 136 "beeScript.bison"
-    {yy.argDFound((yyvsp[(1) - (1)]));}
+#line 195 "beeScript.bison"
+    {
+//yy.argDFound($1);
+}
     break;
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 139 "beeScript.bison"
-    { yy.assignment((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)])) ;}
+#line 200 "beeScript.bison"
+    { 
+//yy.assignment($1,$3)
+ }
     break;
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 144 "beeScript.bison"
-    { yy.assignment((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)])) ;}
+#line 207 "beeScript.bison"
+    { 
+//yy.assignment($1,$3) 
+}
     break;
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 148 "beeScript.bison"
-    { yy.opFound((yyvsp[(2) - (3)]));}
+#line 213 "beeScript.bison"
+    { 
+//yy.opFound($2)
+}
     break;
 
   case 64:
 /* Line 1792 of yacc.c  */
-#line 149 "beeScript.bison"
+#line 216 "beeScript.bison"
     {}
     break;
 
   case 65:
 /* Line 1792 of yacc.c  */
-#line 151 "beeScript.bison"
-    { yy.opFound((yyvsp[(2) - (3)])) ;}
+#line 218 "beeScript.bison"
+    { 
+//yy.opFound($2) 
+}
     break;
 
   case 66:
 /* Line 1792 of yacc.c  */
-#line 152 "beeScript.bison"
-    {(yyval)=(yyvsp[(1) - (1)]); yy.termExprFound((yyvsp[(1) - (1)]));}
+#line 221 "beeScript.bison"
+    {
+//$$=$1; yy.termExprFound($1)
+}
     break;
 
   case 67:
 /* Line 1792 of yacc.c  */
-#line 154 "beeScript.bison"
-    {(yyval)=yy.plus;}
+#line 225 "beeScript.bison"
+    {
+//$$=yy.plus
+}
     break;
 
   case 68:
 /* Line 1792 of yacc.c  */
-#line 155 "beeScript.bison"
-    {(yyval)=yy.minus;}
+#line 228 "beeScript.bison"
+    {
+//$$=yy.minus
+}
     break;
 
   case 69:
 /* Line 1792 of yacc.c  */
-#line 158 "beeScript.bison"
-    {(yyval)=yy.div;}
+#line 233 "beeScript.bison"
+    {
+//$$=yy.div
+}
     break;
 
   case 70:
 /* Line 1792 of yacc.c  */
-#line 159 "beeScript.bison"
-    {(yyval)=yy.mul;}
+#line 236 "beeScript.bison"
+    {
+//$$=yy.mul
+}
     break;
 
   case 72:
 /* Line 1792 of yacc.c  */
-#line 179 "beeScript.bison"
-    { (yyval)={ type:'string',
+#line 274 "beeScript.bison"
+    { 
+/*
+$$={ type:'string',
                val: yytext
              }
+*/
            //  yy.stringtermfound(yytext);
 }
     break;
 
   case 73:
 /* Line 1792 of yacc.c  */
-#line 184 "beeScript.bison"
-    { yy.methodCall((yyvsp[(1) - (1)])); }
+#line 282 "beeScript.bison"
+    { 
+//yy.methodCall($1); 
+}
     break;
 
   case 74:
 /* Line 1792 of yacc.c  */
-#line 185 "beeScript.bison"
-    { (yyval)={ type:'hdress',
+#line 285 "beeScript.bison"
+    {
+/*
+ $$={ type:'hdress',
                val: yytext
                }
            //  yy.hdresstermfound(yytext);
-
+*/
 }
     break;
 
   case 75:
 /* Line 1792 of yacc.c  */
-#line 191 "beeScript.bison"
-    { (yyval)={ type:'id',
-               val: (yyvsp[(1) - (1)])
+#line 293 "beeScript.bison"
+    { 
+/*
+$$={ type:'id',
+               val: $1
               }
-
+*/
             // yy.idtermfound($1);
 }
     break;
 
   case 76:
 /* Line 1792 of yacc.c  */
-#line 197 "beeScript.bison"
-    { (yyval)={ type:'num',
-               val: (yyvsp[(1) - (1)])
+#line 301 "beeScript.bison"
+    { 
+/*$$={ type:'num',
+               val: $1
                }
-
+*/
             // yy.numbertermfound($1);
 }
     break;
 
   case 77:
 /* Line 1792 of yacc.c  */
-#line 203 "beeScript.bison"
-    { (yyval)={ type:'faccess',
-               val: (yyvsp[(1) - (1)])
+#line 308 "beeScript.bison"
+    { 
+/*
+$$={ type:'faccess',
+               val: $1
                }
-
+*/
             // yy.fatermfound($1);
 }
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 1774 "beeScript.c"
+#line 1866 "beeScript.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2002,7 +2094,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 209 "beeScript.bison"
+#line 316 "beeScript.bison"
 
 int main(int argc,char * argv[]){
 

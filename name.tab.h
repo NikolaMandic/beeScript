@@ -78,7 +78,12 @@ extern int yydebug;
      OR = 287,
      MUL = 288,
      AND = 289,
-     UMINUS = 290
+     REGS = 290,
+     MIN = 291,
+     EXPONENT = 292,
+     PII = 293,
+     EE = 294,
+     UMINUS = 295
    };
 #endif
 
