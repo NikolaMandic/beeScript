@@ -63,7 +63,7 @@ BEGIN(INITIAL);
 
 %%
 extern void setFile(char* file){
-printf("reading %s",file);
+printf("reading %s\n",file);
 yyin= fopen( file, "r" );
 }
 
