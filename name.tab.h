@@ -65,7 +65,20 @@ extern int yydebug;
      WHILE = 274,
      e = 275,
      fa = 276,
-     UMINUS = 277
+     EQEQ = 277,
+     BIGGER = 278,
+     SMALLER = 279,
+     COMA = 280,
+     DIV = 281,
+     LPAR = 282,
+     RPAR = 283,
+     MINUS = 284,
+     PLUS = 285,
+     NEQ = 286,
+     OR = 287,
+     MUL = 288,
+     AND = 289,
+     UMINUS = 290
    };
 #endif
 

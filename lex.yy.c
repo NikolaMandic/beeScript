@@ -358,8 +358,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 40
-#define YY_END_OF_BUFFER 41
+#define YY_NUM_RULES 39
+#define YY_END_OF_BUFFER 40
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -369,20 +369,20 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[145] =
     {   0,
-        0,    0,    3,    3,   41,   39,    6,    7,    4,   39,
-       36,   39,   39,   28,   31,   20,   23,   16,   22,   13,
-       21,   39,   39,   26,   19,   25,   33,   39,   27,   39,
-       39,   39,   39,   11,   38,   39,    2,    2,    2,    2,
+        0,    0,    3,    3,   40,   38,    6,    7,    4,   38,
+       35,   38,   38,   27,   30,   20,   23,   16,   22,   13,
+       21,   38,   38,   25,   19,   24,   32,   38,   26,   38,
+       38,   38,   38,   11,   37,   38,    2,    2,    2,    2,
         3,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    8,    4,   18,
-       15,    0,   12,    5,    0,    0,    0,   17,   32,    0,
-        0,   29,    0,    0,   38,   14,    2,    3,    2,    2,
+       15,    0,   12,    5,    0,    0,    0,   17,   31,    0,
+        0,   28,    0,    0,   37,   14,    2,    3,    2,    2,
         2,    3,    2,    2,    3,    2,    2,    2,    2,    2,
 
-        2,    2,    2,    2,    2,    2,    2,    2,    2,   37,
-        0,   34,   35,    0,    0,    0,    1,    2,    3,    2,
-        2,    2,    2,    2,    2,   30,    0,    0,    2,    2,
+        2,    2,    2,    2,    2,    2,    2,    2,    2,   36,
+        0,   33,   34,    0,    0,    0,    1,    2,    3,    2,
+        2,    2,    2,    2,    2,   29,    0,    0,    2,    2,
         2,    0,    9,    2,    2,    0,    2,    0,    2,    0,
         2,   10,    2,    0
     } ;
@@ -842,12 +842,12 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 13 "beeScript.lex"
-return "IDENTI";
+return IDENTI;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 14 "beeScript.lex"
-return "CMD";  
+return CMD;  
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -864,196 +864,191 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 21 "beeScript.lex"
-return 'NUMBER';
+return NUMBER;
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
 #line 22 "beeScript.lex"
-return 'NEWLINE';
+return NEWLINE;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 23 "beeScript.lex"
-return 'NEWLINE';
+return NEWLINE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 24 "beeScript.lex"
-return 'NEWLINE';
+return NEWLINE;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 25 "beeScript.lex"
-return 'WHILE';
+return WHILE;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 26 "beeScript.lex"
-return "REGS";
+return REGS;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 27 "beeScript.lex"
 
   BEGIN(smode);
-  return "S";
+  return S;
 
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 31 "beeScript.lex"
-return 'DDOT';
+return DDOT;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 32 "beeScript.lex"
-return 'DOT';
+return DOT;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 33 "beeScript.lex"
-return '||';
+return OR;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 34 "beeScript.lex"
-return '&&';
+return AND;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 35 "beeScript.lex"
-return ',';
+return COMA;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 36 "beeScript.lex"
-return '==';
+return EQEQ;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 37 "beeScript.lex"
-return '!=';
+return NEQ;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 38 "beeScript.lex"
-return 'EQ';
+return EQ;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 39 "beeScript.lex"
-return '*';
+return MUL;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 40 "beeScript.lex"
-return '/';
+return DIV;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 41 "beeScript.lex"
-return '-';
+return MIN;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 42 "beeScript.lex"
-return '+';
+return PLUS;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 43 "beeScript.lex"
-return ',';
+return BIGGER;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 44 "beeScript.lex"
-return '>';
+return SMALLER;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 45 "beeScript.lex"
-return '<';
+return EXPONENT;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 46 "beeScript.lex"
-return '^';
+return LPAR;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 47 "beeScript.lex"
-return '(';
+return IF;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 48 "beeScript.lex"
-return 'IF';
+return ELSE;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 49 "beeScript.lex"
-return 'ELSE';
+return RPAR;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 50 "beeScript.lex"
-return ')';
+return PII;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 51 "beeScript.lex"
-return 'PI';
+return EE;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 52 "beeScript.lex"
-return 'E';
+return HDRESS;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 53 "beeScript.lex"
-return "HDRESS";
+
+  return DEF;
+
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 54 "beeScript.lex"
-
-  return 'DEF';
+#line 56 "beeScript.lex"
 
 	YY_BREAK
 case 36:
+/* rule 36 can match eol */
 YY_RULE_SETUP
 #line 57 "beeScript.lex"
-
+return STRING;
 	YY_BREAK
 case 37:
-/* rule 37 can match eol */
 YY_RULE_SETUP
 #line 58 "beeScript.lex"
-return 'STRING';
-	YY_BREAK
-case 38:
-YY_RULE_SETUP
-#line 59 "beeScript.lex"
-return "IDENT";
+return IDENT;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(smode):
-#line 60 "beeScript.lex"
+#line 59 "beeScript.lex"
 return EOFF;
+	YY_BREAK
+case 38:
+YY_RULE_SETUP
+#line 61 "beeScript.lex"
+return ANY;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 62 "beeScript.lex"
-return ANY;
-	YY_BREAK
-case 40:
-YY_RULE_SETUP
-#line 66 "beeScript.lex"
+#line 65 "beeScript.lex"
 ECHO;
 	YY_BREAK
-#line 1057 "lex.yy.c"
+#line 1052 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2045,4 +2040,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 66 "beeScript.lex"
+#line 65 "beeScript.lex"

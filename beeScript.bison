@@ -30,9 +30,19 @@
 %token WHILE
 %token e
 %token fa
-
-
-
+%token EQEQ
+%token BIGGER
+%token SMALLER
+%token COMA
+%token DIV
+%token LPAR
+%token RPAR
+%token MINUS
+%token PLUS
+%token NEQ
+%token OR
+%token MUL
+%token AND
 /* operator associations and precedence */
 
 %left '+' '-'
@@ -76,10 +86,10 @@ statement: expressionStatement
 | ifs
 | whiles
 | ife
-| ms  "(" ")" bs statementList  { yy.methodEnd(); }
-| ms "(" argListD ")" bs statementList { yy.methodEnd(); }
-| ms fa "(" argListD ")" bs statementList { yy.methodEnd(); }
-| ms fa "(" ")" bs statementList { yy.methodEnd(); }
+| ms  LPAR RPAR bs statementList  { yy.methodEnd(); }
+| ms LPAR argListD RPAR bs statementList { yy.methodEnd(); }
+| ms fa LPAR argListD RPAR bs statementList { yy.methodEnd(); }
+| ms fa LPAR RPAR bs statementList { yy.methodEnd(); }
 | IDENT argList { yy.methodCall($1); }
 | S cmdL {yy.sendCMD($2)}
 ;
@@ -103,8 +113,8 @@ whileStart: NEWLINE { yy.startWhile(); };
 
 expSList: expSList sep expList | condition;
 sep: ANY;
-funcSig : IDENT "(" ")";
-funcSig : IDENT "(" argList ")";
+funcSig : IDENT LPAR RPAR;
+funcSig : IDENT LPAR argList RPAR;
 
 ifs: IF condition ifStatementsStart statementList { yy.endIf() } ;
 ifStatementsStart: NEWLINE { yy.startIf() };
@@ -115,14 +125,14 @@ elseStatementsStart: NEWLINE {yy.startElse(); };
 condition: expList { yy.condition($1) }
 | expList cop expList;
 arg : expr{ yy.argFound($1); } ;
-cop : "==" | "!=" | "&&" | "||" |  "<" | ">";
+cop : EQEQ | NEQ | AND | OR |  BIGGER | SMALLER;
 argList : arg | arg argCommaList;
-argCommaList : "," arg  
-| "," arg argCommaList;
+argCommaList : COMA arg  
+| COMA arg argCommaList;
 
 argListD : argD | argD argCommaListD;
-argCommaListD : "," argD
-| "," argD argCommaListD;
+argCommaListD : COMA argD
+| COMA argD argCommaListD;
 argD:IDENT{yy.argDFound($1);};
 
 assignment : 
@@ -141,22 +151,22 @@ pm: dm pmop pm { yy.opFound($2)}
 dm: term dmop dm { yy.opFound($2) }
 | term {$$=$1; yy.termExprFound($1)} ; 
 pmop:
-"+" {$$=yy.plus}
-|"-" {$$=yy.minus}
+PLUS {$$=yy.plus}
+|MINUS {$$=yy.minus}
 ;
 dmop:
-"/" {$$=yy.div}
-|"*"{$$=yy.mul}
+DIV {$$=yy.div}
+|MUL{$$=yy.mul}
 ;
 
 expList:pm;
 /*
 3*2*3+4+4*4
 
-op: "+" { yy.plus;}
-|"-" { yy.minus;}
-|"/" { yy.div;}
-|"*" { yy.mul;}
+op: PLUS { yy.plus;}
+|MINUS { yy.minus;}
+|DIV { yy.div;}
+|MUL { yy.mul;}
 |EQ {yy.eq()};
 
 expList : term { $$ = $1; yy.termExprFound($1);  } 
@@ -197,8 +207,7 @@ term: STRING { $$={ type:'string',
             // yy.fatermfound($1);
 };
 %%
-if (typeof module === "undefined" ||  module === null) {
-define(function(){
-return beeScript
-});
+int main(int argc,char * argv[]){
+
+
 }
