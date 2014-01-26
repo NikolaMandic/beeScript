@@ -100,7 +100,17 @@ $$ = $1; yy.identFound($1);
 };
 
 statementList : statement end | statement NEWLINE statementList ;
-end : NEWLINE | EOFF ;
+end : NEWLINE
+{
+
+printf("end");
+
+
+}
+ | EOFF 
+{
+printf("end");
+} ;
 statement: expressionStatement 
 | ifs
 | whiles
@@ -314,7 +324,11 @@ $$={ type:'faccess',
             // yy.fatermfound($1);
 };
 %%
-int main(int argc,char * argv[]){
-
-
+int main(int argc,char ** argv[]){
+    if (argc>0){
+      
+       setFile(argv[1]);
+       printf("result %d", yyparse());
+    }
+    return 0;
 }

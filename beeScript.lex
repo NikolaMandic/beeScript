@@ -3,6 +3,7 @@
 #include <math.h>
 #include "name.tab.h"
   int yywrap(){};
+
 %}
 
 
@@ -60,5 +61,9 @@ BEGIN(INITIAL);
 
 . return ANY;
 
-
+%%
+extern void setFile(char* file){
+printf("reading %s",file);
+yyin= fopen( file, "r" );
+}
 

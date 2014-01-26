@@ -330,6 +330,8 @@ void yyfree (void *  );
 
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
+/* Begin user sect3 */
+
 typedef unsigned char YY_CHAR;
 
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
@@ -569,7 +571,8 @@ char *yytext;
 #include "name.tab.h"
   int yywrap(){};
 
-#line 573 "lex.yy.c"
+
+#line 576 "lex.yy.c"
 
 #define INITIAL 0
 #define smode 1
@@ -752,11 +755,11 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 10 "beeScript.lex"
+#line 11 "beeScript.lex"
 
 
 
-#line 760 "lex.yy.c"
+#line 763 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -841,60 +844,60 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "beeScript.lex"
+#line 14 "beeScript.lex"
 return IDENTI;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 14 "beeScript.lex"
+#line 15 "beeScript.lex"
 return CMD;  
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "beeScript.lex"
+#line 17 "beeScript.lex"
 
 BEGIN(INITIAL);
 
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 20 "beeScript.lex"
+#line 21 "beeScript.lex"
 /* skip whitespace */;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 21 "beeScript.lex"
+#line 22 "beeScript.lex"
 return NUMBER;
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 22 "beeScript.lex"
+#line 23 "beeScript.lex"
 return NEWLINE;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 23 "beeScript.lex"
+#line 24 "beeScript.lex"
 return NEWLINE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 24 "beeScript.lex"
+#line 25 "beeScript.lex"
 return NEWLINE;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 25 "beeScript.lex"
+#line 26 "beeScript.lex"
 return WHILE;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 26 "beeScript.lex"
+#line 27 "beeScript.lex"
 return REGS;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 27 "beeScript.lex"
+#line 28 "beeScript.lex"
 
   BEGIN(smode);
   return S;
@@ -902,153 +905,153 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "beeScript.lex"
+#line 32 "beeScript.lex"
 return DDOT;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 32 "beeScript.lex"
+#line 33 "beeScript.lex"
 return DOT;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 33 "beeScript.lex"
+#line 34 "beeScript.lex"
 return OR;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 34 "beeScript.lex"
+#line 35 "beeScript.lex"
 return AND;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 35 "beeScript.lex"
+#line 36 "beeScript.lex"
 return COMA;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 36 "beeScript.lex"
+#line 37 "beeScript.lex"
 return EQEQ;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 37 "beeScript.lex"
+#line 38 "beeScript.lex"
 return NEQ;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 38 "beeScript.lex"
+#line 39 "beeScript.lex"
 return EQ;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 39 "beeScript.lex"
+#line 40 "beeScript.lex"
 return MUL;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 40 "beeScript.lex"
+#line 41 "beeScript.lex"
 return DIV;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 41 "beeScript.lex"
+#line 42 "beeScript.lex"
 return MIN;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 42 "beeScript.lex"
+#line 43 "beeScript.lex"
 return PLUS;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 43 "beeScript.lex"
+#line 44 "beeScript.lex"
 return BIGGER;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 44 "beeScript.lex"
+#line 45 "beeScript.lex"
 return SMALLER;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 45 "beeScript.lex"
+#line 46 "beeScript.lex"
 return EXPONENT;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 46 "beeScript.lex"
+#line 47 "beeScript.lex"
 return LPAR;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 47 "beeScript.lex"
+#line 48 "beeScript.lex"
 return IF;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 48 "beeScript.lex"
+#line 49 "beeScript.lex"
 return ELSE;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 49 "beeScript.lex"
+#line 50 "beeScript.lex"
 return RPAR;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 50 "beeScript.lex"
+#line 51 "beeScript.lex"
 return PII;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 51 "beeScript.lex"
+#line 52 "beeScript.lex"
 return EE;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 52 "beeScript.lex"
+#line 53 "beeScript.lex"
 return HDRESS;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 53 "beeScript.lex"
+#line 54 "beeScript.lex"
 
   return DEF;
 
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 56 "beeScript.lex"
+#line 57 "beeScript.lex"
 
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 57 "beeScript.lex"
+#line 58 "beeScript.lex"
 return STRING;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 58 "beeScript.lex"
+#line 59 "beeScript.lex"
 return IDENT;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(smode):
-#line 59 "beeScript.lex"
+#line 60 "beeScript.lex"
 return EOFF;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 61 "beeScript.lex"
+#line 62 "beeScript.lex"
 return ANY;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 65 "beeScript.lex"
+#line 64 "beeScript.lex"
 ECHO;
 	YY_BREAK
-#line 1052 "lex.yy.c"
+#line 1055 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2040,4 +2043,12 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 65 "beeScript.lex"
+#line 64 "beeScript.lex"
+
+
+extern void setFile(char* file){
+printf("reading %s",file);
+yyin= fopen( file, "r" );
+}
+
+

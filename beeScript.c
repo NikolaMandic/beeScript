@@ -498,13 +498,13 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint16 yyrline[] =
 {
        0,    63,    70,    74,    78,    82,    86,    96,   102,   102,
-     103,   103,   104,   105,   106,   107,   108,   111,   114,   117,
-     120,   123,   127,   131,   134,   137,   140,   144,   146,   146,
-     149,   153,   157,   161,   161,   162,   163,   164,   166,   169,
-     173,   176,   180,   183,   184,   187,   187,   187,   187,   187,
-     187,   188,   188,   189,   190,   192,   192,   193,   194,   195,
-     200,   207,   212,   213,   216,   218,   221,   225,   228,   233,
-     236,   241,   274,   282,   285,   293,   301,   308
+     103,   110,   114,   115,   116,   117,   118,   121,   124,   127,
+     130,   133,   137,   141,   144,   147,   150,   154,   156,   156,
+     159,   163,   167,   171,   171,   172,   173,   174,   176,   179,
+     183,   186,   190,   193,   194,   197,   197,   197,   197,   197,
+     197,   198,   198,   199,   200,   202,   202,   203,   204,   205,
+     210,   217,   222,   223,   226,   228,   231,   235,   238,   243,
+     246,   251,   284,   292,   295,   303,   311,   318
 };
 #endif
 
@@ -1542,9 +1542,28 @@ $$ = $1; yy.identFound($1);
 }
     break;
 
+  case 10:
+/* Line 1792 of yacc.c  */
+#line 104 "beeScript.bison"
+    {
+
+printf("end");
+
+
+}
+    break;
+
+  case 11:
+/* Line 1792 of yacc.c  */
+#line 111 "beeScript.bison"
+    {
+printf("end");
+}
+    break;
+
   case 16:
 /* Line 1792 of yacc.c  */
-#line 108 "beeScript.bison"
+#line 118 "beeScript.bison"
     {
 // yy.methodEnd();
  }
@@ -1552,7 +1571,7 @@ $$ = $1; yy.identFound($1);
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 111 "beeScript.bison"
+#line 121 "beeScript.bison"
     { 
 //yy.methodEnd();
  }
@@ -1560,7 +1579,7 @@ $$ = $1; yy.identFound($1);
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 114 "beeScript.bison"
+#line 124 "beeScript.bison"
     { 
 //yy.methodEnd();
  }
@@ -1568,7 +1587,7 @@ $$ = $1; yy.identFound($1);
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 117 "beeScript.bison"
+#line 127 "beeScript.bison"
     { 
 //yy.methodEnd();
  }
@@ -1576,7 +1595,7 @@ $$ = $1; yy.identFound($1);
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 120 "beeScript.bison"
+#line 130 "beeScript.bison"
     { 
 //yy.methodCall($1); 
 }
@@ -1584,7 +1603,7 @@ $$ = $1; yy.identFound($1);
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 123 "beeScript.bison"
+#line 133 "beeScript.bison"
     {
 //yy.sendCMD($2)
 }
@@ -1592,7 +1611,7 @@ $$ = $1; yy.identFound($1);
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 127 "beeScript.bison"
+#line 137 "beeScript.bison"
     {
 //$$=yy.addIDENTI($1)
 }
@@ -1600,7 +1619,7 @@ $$ = $1; yy.identFound($1);
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 131 "beeScript.bison"
+#line 141 "beeScript.bison"
     {
 //$$=yy.addCMD($1)
 }
@@ -1608,7 +1627,7 @@ $$ = $1; yy.identFound($1);
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 134 "beeScript.bison"
+#line 144 "beeScript.bison"
     {
 //$$=yy.addIDENTI($2)
 }
@@ -1616,7 +1635,7 @@ $$ = $1; yy.identFound($1);
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 137 "beeScript.bison"
+#line 147 "beeScript.bison"
     {
 //$$=yy.addCMD($2)
 }
@@ -1624,7 +1643,7 @@ $$ = $1; yy.identFound($1);
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 140 "beeScript.bison"
+#line 150 "beeScript.bison"
     { 
 //yy.methodDeff($2);
 }
@@ -1632,7 +1651,7 @@ $$ = $1; yy.identFound($1);
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 149 "beeScript.bison"
+#line 159 "beeScript.bison"
     { 
 //yy.endWhile();
 }
@@ -1640,7 +1659,7 @@ $$ = $1; yy.identFound($1);
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 153 "beeScript.bison"
+#line 163 "beeScript.bison"
     {
 //yy.startWhileExpr();
 }
@@ -1648,7 +1667,7 @@ $$ = $1; yy.identFound($1);
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 157 "beeScript.bison"
+#line 167 "beeScript.bison"
     { 
 //yy.startWhile(); 
 }
@@ -1656,7 +1675,7 @@ $$ = $1; yy.identFound($1);
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 166 "beeScript.bison"
+#line 176 "beeScript.bison"
     { 
 //yy.endIf() 
 }
@@ -1664,7 +1683,7 @@ $$ = $1; yy.identFound($1);
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 169 "beeScript.bison"
+#line 179 "beeScript.bison"
     { 
 //yy.startIf()
  }
@@ -1672,7 +1691,7 @@ $$ = $1; yy.identFound($1);
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 173 "beeScript.bison"
+#line 183 "beeScript.bison"
     { 
 //yy.endElse(); 
 }
@@ -1680,7 +1699,7 @@ $$ = $1; yy.identFound($1);
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 176 "beeScript.bison"
+#line 186 "beeScript.bison"
     {
 //yy.startElse();
  }
@@ -1688,7 +1707,7 @@ $$ = $1; yy.identFound($1);
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 180 "beeScript.bison"
+#line 190 "beeScript.bison"
     { 
 //yy.condition($1)
  }
@@ -1696,7 +1715,7 @@ $$ = $1; yy.identFound($1);
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 184 "beeScript.bison"
+#line 194 "beeScript.bison"
     { 
 //yy.argFound($1); 
 }
@@ -1704,7 +1723,7 @@ $$ = $1; yy.identFound($1);
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 195 "beeScript.bison"
+#line 205 "beeScript.bison"
     {
 //yy.argDFound($1);
 }
@@ -1712,7 +1731,7 @@ $$ = $1; yy.identFound($1);
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 200 "beeScript.bison"
+#line 210 "beeScript.bison"
     { 
 //yy.assignment($1,$3)
  }
@@ -1720,7 +1739,7 @@ $$ = $1; yy.identFound($1);
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 207 "beeScript.bison"
+#line 217 "beeScript.bison"
     { 
 //yy.assignment($1,$3) 
 }
@@ -1728,7 +1747,7 @@ $$ = $1; yy.identFound($1);
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 213 "beeScript.bison"
+#line 223 "beeScript.bison"
     { 
 //yy.opFound($2)
 }
@@ -1736,13 +1755,13 @@ $$ = $1; yy.identFound($1);
 
   case 64:
 /* Line 1792 of yacc.c  */
-#line 216 "beeScript.bison"
+#line 226 "beeScript.bison"
     {}
     break;
 
   case 65:
 /* Line 1792 of yacc.c  */
-#line 218 "beeScript.bison"
+#line 228 "beeScript.bison"
     { 
 //yy.opFound($2) 
 }
@@ -1750,7 +1769,7 @@ $$ = $1; yy.identFound($1);
 
   case 66:
 /* Line 1792 of yacc.c  */
-#line 221 "beeScript.bison"
+#line 231 "beeScript.bison"
     {
 //$$=$1; yy.termExprFound($1)
 }
@@ -1758,7 +1777,7 @@ $$ = $1; yy.identFound($1);
 
   case 67:
 /* Line 1792 of yacc.c  */
-#line 225 "beeScript.bison"
+#line 235 "beeScript.bison"
     {
 //$$=yy.plus
 }
@@ -1766,7 +1785,7 @@ $$ = $1; yy.identFound($1);
 
   case 68:
 /* Line 1792 of yacc.c  */
-#line 228 "beeScript.bison"
+#line 238 "beeScript.bison"
     {
 //$$=yy.minus
 }
@@ -1774,7 +1793,7 @@ $$ = $1; yy.identFound($1);
 
   case 69:
 /* Line 1792 of yacc.c  */
-#line 233 "beeScript.bison"
+#line 243 "beeScript.bison"
     {
 //$$=yy.div
 }
@@ -1782,7 +1801,7 @@ $$ = $1; yy.identFound($1);
 
   case 70:
 /* Line 1792 of yacc.c  */
-#line 236 "beeScript.bison"
+#line 246 "beeScript.bison"
     {
 //$$=yy.mul
 }
@@ -1790,7 +1809,7 @@ $$ = $1; yy.identFound($1);
 
   case 72:
 /* Line 1792 of yacc.c  */
-#line 274 "beeScript.bison"
+#line 284 "beeScript.bison"
     { 
 /*
 $$={ type:'string',
@@ -1803,7 +1822,7 @@ $$={ type:'string',
 
   case 73:
 /* Line 1792 of yacc.c  */
-#line 282 "beeScript.bison"
+#line 292 "beeScript.bison"
     { 
 //yy.methodCall($1); 
 }
@@ -1811,7 +1830,7 @@ $$={ type:'string',
 
   case 74:
 /* Line 1792 of yacc.c  */
-#line 285 "beeScript.bison"
+#line 295 "beeScript.bison"
     {
 /*
  $$={ type:'hdress',
@@ -1824,7 +1843,7 @@ $$={ type:'string',
 
   case 75:
 /* Line 1792 of yacc.c  */
-#line 293 "beeScript.bison"
+#line 303 "beeScript.bison"
     { 
 /*
 $$={ type:'id',
@@ -1837,7 +1856,7 @@ $$={ type:'id',
 
   case 76:
 /* Line 1792 of yacc.c  */
-#line 301 "beeScript.bison"
+#line 311 "beeScript.bison"
     { 
 /*$$={ type:'num',
                val: $1
@@ -1849,7 +1868,7 @@ $$={ type:'id',
 
   case 77:
 /* Line 1792 of yacc.c  */
-#line 308 "beeScript.bison"
+#line 318 "beeScript.bison"
     { 
 /*
 $$={ type:'faccess',
@@ -1862,7 +1881,7 @@ $$={ type:'faccess',
 
 
 /* Line 1792 of yacc.c  */
-#line 1866 "beeScript.c"
+#line 1885 "beeScript.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2094,9 +2113,13 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 316 "beeScript.bison"
+#line 326 "beeScript.bison"
 
-int main(int argc,char * argv[]){
-
-
+int main(int argc,char ** argv[]){
+    if (argc>0){
+      
+       setFile(argv[1]);
+       printf("result %d", yyparse());
+    }
+    return 0;
 }
