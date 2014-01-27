@@ -1549,7 +1549,7 @@ $$ = $1; yy.identFound($1);
 #line 106 "beeScript.bison"
     {
 
-printf("end");
+printf("end with newline\n");
 
 
 }
@@ -1559,7 +1559,7 @@ printf("end");
 /* Line 1792 of yacc.c  */
 #line 113 "beeScript.bison"
     {
-printf("end");
+
 }
     break;
 

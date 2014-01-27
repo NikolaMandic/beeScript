@@ -11,21 +11,19 @@
 %%
 
 
-<smode>'\#\w+[ ]+' return IDENTI;
-<smode>'[^#\n]+' return CMD;  
+<smode>\#\w+[ ]+ return IDENTI;
+<smode>[^#\n]+ return CMD;  
 
-<smode>'[^\n]*' %{
+<smode>[^\n]* %{
 BEGIN(INITIAL);
 %}
 
    [ ]+ /* skip whitespace */;
-  [0-9]+("."[0-9]+)?\b return NUMBER;
- \n return NEWLINE;
- \r return NEWLINE;
- \r\c return NEWLINE;
+  [0-9]+("."[0-9]+)? return NUMBER;
+
  while return WHILE;
  registers return REGS;
-'s' %{
+s %{
   BEGIN(smode);
   return S;
 %}
@@ -36,7 +34,7 @@ BEGIN(INITIAL);
  "," return COMA;
  "==" return EQEQ;
  "!=" return NEQ;
- = return EQ;
+ "=" return EQ;
  "*" return MUL;
  "/" return DIV;
  "-" return MIN;
@@ -45,21 +43,23 @@ BEGIN(INITIAL);
  "<" return SMALLER;
  "^" return EXPONENT;
  "(" return LPAR;
- "if" return IF;
- "else" return ELSE;
-  ")" return RPAR;
-  "PI" return PII;
-  "E" return EE;
-  "0x"\w+ return HDRESS;
-"def" %{
+ if return IF;
+ else return ELSE;
+ ")" return RPAR;
+ PI return PII;
+ E return EE;
+ 0x[a-f0-9]+ return HDRESS;
+def %{
   return DEF;
 %}
 %
-\'[^"]+\' return STRING;
-[a-zA-Z]+ return IDENT;
+[a-z][a-z]* return IDENT;
+[\^"]+ return STRING;
+ [\n] return NEWLINE;
+
 <<EOF>> return EOFF;
 
-. return ANY;
+
 
 %%
 extern void setFile(char* file){

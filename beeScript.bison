@@ -63,10 +63,10 @@
 
 expressions
     : e EOFF
-        {return $1;}
+        {}
     | e NEWLINE
 EOFF
-{return 'newline'; }
+{printf("eof\n");}
     ;
 accessorList :
   accessorList DDOT IDENT { 
@@ -105,13 +105,13 @@ statementList : statement end | statement NEWLINE statementList ;
 end : NEWLINE
 {
 
-printf("end");
+printf("end with newline\n");
 
 
 }
  | EOFF 
 {
-printf("end");
+
 } ;
 statement: expressionStatement 
 | ifs
