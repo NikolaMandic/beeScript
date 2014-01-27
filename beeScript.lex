@@ -11,10 +11,10 @@
 %%
 
 
-<smode>\#\w+[ ]+ return IDENTI;
-<smode>[^#\n]+ return CMD;  
+<smode>'\#\w+[ ]+' return IDENTI;
+<smode>'[^#\n]+' return CMD;  
 
-<smode>[^\n]* %{
+<smode>'[^\n]*' %{
 BEGIN(INITIAL);
 %}
 
@@ -23,9 +23,9 @@ BEGIN(INITIAL);
  \n return NEWLINE;
  \r return NEWLINE;
  \r\c return NEWLINE;
- "while" return WHILE;
- "registers" return REGS;
-"s" %{
+ while return WHILE;
+ registers return REGS;
+'s' %{
   BEGIN(smode);
   return S;
 %}
@@ -36,7 +36,7 @@ BEGIN(INITIAL);
  "," return COMA;
  "==" return EQEQ;
  "!=" return NEQ;
- "=" return EQ;
+ = return EQ;
  "*" return MUL;
  "/" return DIV;
  "-" return MIN;
@@ -56,7 +56,7 @@ BEGIN(INITIAL);
 %}
 %
 \'[^"]+\' return STRING;
-\w+ return IDENT;
+[a-zA-Z]+ return IDENT;
 <<EOF>> return EOFF;
 
 . return ANY;

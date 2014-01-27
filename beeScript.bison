@@ -7,6 +7,8 @@
        #define YYSTYPE char const *
        int yylex (void);
        void yyerror (char const *c){};
+       
+       #define yylex yylexcustom
      %}
 
 
@@ -324,6 +326,12 @@ $$={ type:'faccess',
             // yy.fatermfound($1);
 };
 %%
+#define yylex yylex
+int yylexcustom(){
+    int token = yylex();
+    printf("token %d \n",token);
+    return token;
+}
 int main(int argc,char ** argv[]){
     if (argc>0){
       
