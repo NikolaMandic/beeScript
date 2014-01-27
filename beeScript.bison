@@ -102,17 +102,15 @@ $$ = $1; yy.identFound($1);
 };
 
 statementList : statement end | statement NEWLINE statementList ;
-end : NEWLINE
+end :
+ NEWLINE 
 {
 
 printf("end with newline\n");
 
 
 }
- | EOFF 
-{
-
-} ;
+;
 statement: expressionStatement 
 | ifs
 | whiles

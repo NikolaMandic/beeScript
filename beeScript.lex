@@ -57,7 +57,7 @@ def %{
 [\^"]+ return STRING;
  [\n] return NEWLINE;
 
-<<EOF>> return EOFF;
+
 
 
 

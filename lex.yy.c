@@ -1015,17 +1015,15 @@ YY_RULE_SETUP
 #line 58 "beeScript.lex"
 return NEWLINE;
 	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-case YY_STATE_EOF(smode):
-#line 60 "beeScript.lex"
-return EOFF;
-	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 64 "beeScript.lex"
 ECHO;
 	YY_BREAK
-#line 1029 "lex.yy.c"
+#line 1024 "lex.yy.c"
+case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(smode):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
